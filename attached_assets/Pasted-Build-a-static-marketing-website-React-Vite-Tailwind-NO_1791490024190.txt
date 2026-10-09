@@ -1,0 +1,15 @@
+Build a static marketing website (React + Vite + Tailwind, NO backend, NO database, NO auth, NO tests). Build everything in ONE pass, don't ask me questions, use placeholder content where info is missing.
+
+BRAND: "Pacific Coast Lighting & Electrical Solutions" — manufacturer sales rep agency selling lighting & electrical products to wholesale electrical distributors in Southern California & Hawaii. Audience: electrical contractors, architects, engineers, lighting designers, GCs, developers, property managers/owners. Use the attached logo (logo.png) in navbar + footer.
+
+STYLE: beachy, warm, premium. Colors: navy #0E1E3A, ocean #2F6A8A, sunset gold #F2A33A, golden hour #E8822A, sand #FBF3E4, white. Fonts: Poppins (headings), Inter (body). Use SVG wave dividers between sections, sunset gradients, rounded cards, a subtle lightning-bolt accent. Use your stock image tool for: beach pier sunset, palm trees at golden hour, modern architectural lighting, Hawaii coastline, warm interior lighting, electrician at work.
+
+PAGES (react-router):
+1. Home: full-width sunset hero + headline "Powering the Coast with Trusted Lighting & Electrical Brands", CTA buttons (Request a Quote / View Line Card), "Who we serve" icon grid, 5 manufacturer logo strip, territories section (SoCal + Hawaii), CTA banner.
+2. About: story, how the rep model helps distributors & specifiers, service area, 2 team placeholder cards.
+3. Manufacturers: 5 cards (placeholder names: Coastline Luminaires, Harbor Controls, Tidewater Electrical, Summit LED, Islandwire) each with logo placeholder, short description, category tags, "Visit Website" external link (target=_blank).
+4. Line Card: branded on-page line card (table: manufacturer, categories, website) + "Download Line Card (PDF)" button using html2pdf.js to export that section.
+5. Blog: grid of 3 sample posts from a local data file + a simple post detail page.
+6. Request a Quote: form (name, company, role dropdown, email, phone, project name, manufacturer interest multi-select, timeline, message, file upload) with validation and a success message (frontend-only).
+
+Keep all content in ONE file: src/data/site.ts. Navbar sticky, mobile hamburger, footer with contact info + territories. Fully responsive. Add page titles/meta.

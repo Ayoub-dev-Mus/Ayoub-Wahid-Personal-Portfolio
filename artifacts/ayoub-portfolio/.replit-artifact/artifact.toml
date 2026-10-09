@@ -1,0 +1,23 @@
+kind = "web"
+previewPath = "/"
+title = "Ayoub Wahid — Portfolio"
+description = "Personal portfolio for Casablanca-based Shopify expert and full-stack AI developer Ayoub Wahid, with project showcases and a contact form."
+version = "1.0.0"
+id = "artifacts/ayoub-portfolio"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23075
+
+[services.development]
+run = "pnpm --filter @workspace/ayoub-portfolio run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ayoub-portfolio", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/ayoub-portfolio", "run", "start" ]
+
+[services.env]
+PORT = "23075"
+BASE_PATH = "/"

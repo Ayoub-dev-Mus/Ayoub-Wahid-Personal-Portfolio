@@ -1,8 +1,13 @@
-# [Project name]
+# Ayoub Wahid Portfolio
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A single-page portfolio for a Casablanca-based freelance Shopify expert and full-stack/AI developer.
 
 ## Run & Operate
+
+- `pnpm --filter @workspace/ayoub-portfolio run dev` — serve the optimized Next.js build through its managed workflow; rebuild after code edits
+- `pnpm --filter @workspace/ayoub-portfolio run develop` — optional hot-reload development server; compilation can exceed preview readiness limits
+- `pnpm --filter @workspace/ayoub-portfolio run start` — Next.js production server
+- Contact email requires `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, and `CONTACT_FROM_EMAIL` in workspace secrets. Blank placeholders are documented in the portfolio's `.env.example`.
 
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
@@ -26,7 +31,9 @@ _Populate as you build — short repo map plus pointers to the source-of-truth f
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The portfolio uses Next.js App Router rather than the default Vite scaffold because the supplied brief requires Next.js and next/image. Next.js 14 was blocked by the package registry; use the current supported Next.js release.
+- The portfolio owns its only dynamic endpoint at `/contact/send`, avoiding the shared API service's `/api` prefix. No database or authentication is required.
+- Mail delivery stays unconfigured until the owner supplies Resend credentials and sender/recipient addresses, as requested. Missing configuration must return an honest error, never simulated success.
 
 ## Product
 
@@ -34,7 +41,9 @@ _Describe the high-level user-facing capabilities of this app once they exist._
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Use the Nudge Folio reference for visual inspiration with the supplied ivory/ink/terracotta palette, not the original template identity or its media.
+- Keep copy and projects editable in `content/site.ts` and `content/projects.ts`.
+- Keep placeholder imagery replaceable and do not invent outcomes for incomplete project descriptions.
 
 ## Gotchas
 

@@ -1,0 +1,1 @@
+- [Portfolio rendering](portfolio-rendering.md) — self-host fonts and keep initial content visible before scripts load; preview startup and hydration can be slow.
