@@ -4,5 +4,8 @@ const nextConfig = {
   poweredByHeader: false,
   allowedDevOrigins: ["127.0.0.1", "localhost", "*.replit.dev", "*.replit.app"],
   images: { formats: ["image/avif", "image/webp"] },
+  experimental: {
+    agentUpgrade: "security",
+  },
 };
 export default nextConfig;

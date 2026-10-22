@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
+export const maxDuration = 20;
 
 const attempts = new Map<string, { count: number; expires: number }>();
 const projectTypes = new Set([

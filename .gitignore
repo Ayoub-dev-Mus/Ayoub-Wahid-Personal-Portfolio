@@ -11,6 +11,12 @@ out-tsc
 # dependencies
 node_modules
 
+# Next.js
+.next/
+.vercel
+.env
+.env*.local
+
 # IDEs and editors
 /.idea
 .project

@@ -3,27 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next start -H 0.0.0.0 -p ${PORT:-3000}",
-    "develop": "next dev --webpack -H 0.0.0.0 -p ${PORT:-3000}",
-    "build": "next build",
-    "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
-  },
-  "dependencies": {
-    "framer-motion": "^11.18.2",
-    "lucide-react": "^0.469.0",
-    "next": "^16.4.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
-    "resend": "^4.0.1"
-  },
-  "devDependencies": {
-    "@types/node": "^20.17.0",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5.6.3"
+    "dev": "pnpm --dir ../.. run dev",
+    "build": "pnpm --dir ../.. run build",
+    "start": "pnpm --dir ../.. run start",
+    "typecheck": "pnpm --dir ../.. run typecheck"
   }
 }
