@@ -99,11 +99,20 @@ export async function POST(request: NextRequest) {
   if (budget && (budget.length > 100 || !budgets.has(budget))) return fail("Please choose a valid budget range.", 400);
   if (message.length < 10 || message.length > 5000 || hasControl(message, true)) return fail("Please write a message between 10 and 5,000 characters.", 400);
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.CONTACT_TO_EMAIL;
-  const from = process.env.CONTACT_FROM_EMAIL;
-  if (!apiKey || !to || !from) {
-    return fail("Email delivery is not configured yet.", 503);
+  const setting = (key: string) => {
+    const value = process.env[key];
+    return typeof value === "string" ? value.trim() : "";
+  };
+  const apiKey = setting("RESEND_API_KEY");
+  const to = setting("CONTACT_TO_EMAIL");
+  const from = setting("CONTACT_FROM_EMAIL");
+  const missing = [
+    !apiKey && "RESEND_API_KEY",
+    !to && "CONTACT_TO_EMAIL",
+    !from && "CONTACT_FROM_EMAIL",
+  ].filter((item) => item !== false);
+  if (missing.length) {
+    return fail(`Email delivery is not configured yet. Missing ${missing.join(", ")}. Save them for Production, then redeploy.`, 503);
   }
 
   try {
@@ -122,7 +131,15 @@ export async function POST(request: NextRequest) {
       }),
       signal: AbortSignal.timeout(15_000),
     });
-    if (!result.ok) return fail("Email delivery failed. Please try again later.", 502);
+    if (!result.ok) {
+      let detail = "";
+      try {
+        const payload: unknown = await result.json();
+        const message = payload && typeof payload === "object" && "message" in payload ? payload.message : "";
+        if (typeof message === "string") detail = message.replace(/\s+/g, " ").slice(0, 180);
+      } catch { /* keep the generic failure */ }
+      return fail(detail ? `Email delivery failed. ${detail}` : "Email delivery failed. Please try again later.", 502);
+    }
     return NextResponse.json({
       success: true,
       message: "Thanks for getting in touch. Your message has been sent, and I'll reply within 24 hours.",
