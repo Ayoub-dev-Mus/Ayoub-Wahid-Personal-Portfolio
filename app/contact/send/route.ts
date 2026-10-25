@@ -58,6 +58,70 @@ function limited(address: string) {
   return false;
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function enquiryEmail(input: { name: string; email: string; projectType: string; budget: string; message: string }) {
+  const name = escapeHtml(input.name);
+  const email = escapeHtml(input.email);
+  const projectType = escapeHtml(input.projectType);
+  const budget = escapeHtml(input.budget || "Not specified");
+  const message = escapeHtml(input.message).replace(/\r\n|\r|\n/g, "<br>");
+  const reply = `mailto:${encodeURIComponent(input.email)}`;
+  const row = (label: string, value: string) => `
+    <tr>
+      <td style="padding:14px 0;border-top:1px solid #141414;font-family:Georgia,'Times New Roman',serif;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#141414;width:132px;vertical-align:top;">${label}</td>
+      <td style="padding:14px 0;border-top:1px solid #141414;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.4;color:#141414;">${value}</td>
+    </tr>`;
+  const html = `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#E7DCC8;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#E7DCC8;padding:28px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#F4EFE6;border:1px solid #141414;border-radius:28px;">
+          <tr>
+            <td style="padding:28px 28px 8px;">
+              <div style="font-family:Georgia,'Times New Roman',serif;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:#141414;">Ayoub Wahid · Casablanca</div>
+              <h1 style="margin:18px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:40px;line-height:0.92;letter-spacing:-0.03em;font-weight:700;color:#141414;">New enquiry<br><span style="color:#D9572B;">${projectType}</span></h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:22px 28px 8px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                ${row("Name", name)}
+                ${row("Email", `<a href="${reply}" style="color:#141414;text-decoration:underline;">${email}</a>`)}
+                ${row("Project", projectType)}
+                ${row("Budget", budget)}
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 28px 28px;">
+              <div style="margin-top:8px;padding:18px 18px 20px;border:1px solid #141414;border-radius:18px;background:#E7DCC8;">
+                <div style="font-family:Georgia,'Times New Roman',serif;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;">Message</div>
+                <div style="margin-top:10px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.55;color:#141414;">${message}</div>
+              </div>
+              <div style="margin-top:22px;">
+                <a href="${reply}" style="display:inline-block;background:#D9572B;color:#141414;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;text-decoration:none;padding:14px 22px;border-radius:999px;">Reply to ${name}</a>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+  const text = `New enquiry: ${input.projectType}\n\nName: ${input.name}\nEmail: ${input.email}\nBudget: ${input.budget || "Not specified"}\n\n${input.message}`;
+  return { html, text };
+}
+
 function hasControl(value: string, allowNewlines = false) {
   for (const char of value) {
     const code = char.charCodeAt(0);
@@ -105,7 +169,9 @@ export async function POST(request: NextRequest) {
   };
   const apiKey = setting("RESEND_API_KEY");
   const to = setting("CONTACT_TO_EMAIL") || "contact@wahidayoub.com";
-  const from = setting("CONTACT_FROM_EMAIL") || "client@wahidayoub.com";
+  const sender = setting("CONTACT_FROM_EMAIL") || "client@wahidayoub.com";
+  const from = sender.includes("<") ? sender : `Ayoub Wahid <${sender}>`;
+  const letter = enquiryEmail({ name, email, projectType, budget, message });
   if (!apiKey) {
     return fail("Email delivery is not configured yet. Missing RESEND_API_KEY. Save it for Production, then redeploy.", 503);
   }
@@ -121,8 +187,9 @@ export async function POST(request: NextRequest) {
         from,
         to: [to],
         reply_to: email,
-        subject: `Portfolio enquiry: ${projectType}`,
-        text: `Name: ${name}\nEmail: ${email}\nProject type: ${projectType}\nBudget: ${budget || "Not specified"}\n\n${message}`,
+        subject: `New enquiry · ${projectType} · ${name}`,
+        html: letter.html,
+        text: letter.text,
       }),
       signal: AbortSignal.timeout(15_000),
     });
