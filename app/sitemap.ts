@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
-import { getOrigin } from "@/lib/origin";
+import { publicOrigin } from "@/lib/origin";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const origin = await getOrigin();
+export default function sitemap(): MetadataRoute.Sitemap {
+  const origin = publicOrigin();
   if (!origin) return [];
   return [{ url: `${origin}/`, changeFrequency: "monthly", priority: 1 }];
 }

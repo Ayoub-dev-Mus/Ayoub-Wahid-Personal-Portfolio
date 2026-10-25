@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
-import { getOrigin } from "@/lib/origin";
+import { publicOrigin } from "@/lib/origin";
 
-export default async function robots(): Promise<MetadataRoute.Robots> {
-  const origin = await getOrigin();
+export default function robots(): MetadataRoute.Robots {
+  const origin = publicOrigin();
   return { rules: { userAgent: "*", allow: "/" }, ...(origin ? { sitemap: `${origin}/sitemap.xml` } : {}) };
 }

@@ -2,14 +2,14 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { site } from "@/content/site";
-import { getOrigin } from "@/lib/origin";
+import { publicOrigin } from "@/lib/origin";
 
 const display = localFont({ src: "../public/fonts/anton-latin.woff2", weight: "400", variable: "--font-display", display: "swap" });
 const sans = localFont({ src: "../public/fonts/inter-latin.woff2", weight: "100 900", variable: "--font-sans", display: "swap" });
 const mono = localFont({ src: "../public/fonts/jetbrains-mono-latin.woff2", weight: "100 800", variable: "--font-mono", display: "swap" });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const origin = await getOrigin();
+export function generateMetadata(): Metadata {
+  const origin = publicOrigin();
   const title = `${site.name} — Shopify Expert & Full-Stack / AI Developer, Casablanca`;
   return {
     ...(origin ? { metadataBase: new URL(origin) } : {}),
