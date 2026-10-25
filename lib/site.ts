@@ -3,8 +3,8 @@
  * TODO: replace the empty strings. An empty value is not rendered.
  */
 export const contactLinks = {
-  EMAIL: "",
-  LINKEDIN_URL: "",
+  EMAIL: "contact@wahidayoub.com",
+  LINKEDIN_URL: "https://www.linkedin.com/in/ayoub-wahid-39bab5191/",
   GITHUB_URL: "",
   CALENDAR_URL: "",
   UPWORK_URL: "https://www.upwork.com/freelancers/~019c81c48c7c437e27",

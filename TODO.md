@@ -2,8 +2,8 @@
 
 The page hides anything left empty. Nothing below is invented.
 
-- [ ] `lib/site.ts` → `EMAIL` (your real address)
-- [ ] `lib/site.ts` → `LINKEDIN_URL`
+- [x] `lib/site.ts` → `EMAIL` (your real address)
+- [x] `lib/site.ts` → `LINKEDIN_URL`
 - [ ] `lib/site.ts` → `GITHUB_URL` (leave empty to hide the link)
 - [ ] `lib/site.ts` → `CALENDAR_URL` (the “Book a 15-min call” button stays hidden until this is set)
 - [ ] `public/images/portrait.jpg` (replace the current file; the alt text is already set)
