@@ -66,6 +66,35 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
+function telegramText(input: { name: string; email: string; projectType: string; budget: string; message: string }) {
+  const safe = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return [
+    "<b>New enquiry</b>",
+    "",
+    `<b>Name</b>\n${safe(input.name)}`,
+    `<b>Email</b>\n${safe(input.email)}`,
+    `<b>Project</b>\n${safe(input.projectType)}`,
+    `<b>Budget</b>\n${safe(input.budget || "Not specified")}`,
+    "",
+    safe(input.message).slice(0, 3200),
+  ].join("\n");
+}
+
+async function notifyTelegram(token: string, chatId: string, input: { name: string; email: string; projectType: string; budget: string; message: string }) {
+  if (!token || !chatId) return;
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: telegramText(input),
+      parse_mode: "HTML",
+      disable_web_page_preview: true,
+    }),
+    signal: AbortSignal.timeout(10_000),
+  });
+}
+
 function enquiryEmail(input: { name: string; email: string; projectType: string; budget: string; message: string }) {
   const name = escapeHtml(input.name);
   const email = escapeHtml(input.email);
@@ -193,6 +222,11 @@ export async function POST(request: NextRequest) {
       }),
       signal: AbortSignal.timeout(15_000),
     });
+    if (result.ok) {
+      const token = setting("TELEGRAM_BOT_TOKEN");
+      const chatId = setting("TELEGRAM_CHAT_ID");
+      try { await notifyTelegram(token, chatId, { name, email, projectType, budget, message }); } catch { /* the email already went out */ }
+    }
     if (!result.ok) {
       let detail = "";
       try {
