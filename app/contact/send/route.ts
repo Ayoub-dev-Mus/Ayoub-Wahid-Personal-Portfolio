@@ -104,15 +104,10 @@ export async function POST(request: NextRequest) {
     return typeof value === "string" ? value.trim() : "";
   };
   const apiKey = setting("RESEND_API_KEY");
-  const to = setting("CONTACT_TO_EMAIL");
-  const from = setting("CONTACT_FROM_EMAIL");
-  const missing = [
-    !apiKey && "RESEND_API_KEY",
-    !to && "CONTACT_TO_EMAIL",
-    !from && "CONTACT_FROM_EMAIL",
-  ].filter((item) => item !== false);
-  if (missing.length) {
-    return fail(`Email delivery is not configured yet. Missing ${missing.join(", ")}. Save them for Production, then redeploy.`, 503);
+  const to = setting("CONTACT_TO_EMAIL") || "contact@wahidayoub.com";
+  const from = setting("CONTACT_FROM_EMAIL") || "client@wahidayoub.com";
+  if (!apiKey) {
+    return fail("Email delivery is not configured yet. Missing RESEND_API_KEY. Save it for Production, then redeploy.", 503);
   }
 
   try {
