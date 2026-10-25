@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --dir ../.. run dev",
-    "build": "pnpm --dir ../.. run build",
+    "build": "pnpm --dir ../.. run build && rm -rf .next && cp -RL ../../.next .next",
     "start": "pnpm --dir ../.. run start",
     "typecheck": "pnpm --dir ../.. run typecheck"
   }
