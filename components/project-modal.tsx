@@ -8,7 +8,28 @@ import { site } from "@/content/site";
 
 const FOCUSABLE = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
-export function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
+export type ProjectModalLabels = {
+  close: string;
+  visit: string;
+  similar: string;
+  role: string;
+  did: string;
+  result: string;
+  concept: string;
+};
+
+const englishLabels = (): ProjectModalLabels => ({
+  close: site.ui.closeProject,
+  visit: site.ui.visitProject,
+  similar: site.ui.similarProject,
+  role: site.ui.myRole,
+  did: site.ui.whatIDid,
+  result: site.ui.result,
+  concept: site.ui.concept,
+});
+
+export function ProjectModal({ project, onClose, labels }: { project: Project; onClose: () => void; labels?: ProjectModalLabels }) {
+  const copy = labels ?? englishLabels();
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const closeRef = useRef(onClose);
@@ -56,7 +77,7 @@ export function ProjectModal({ project, onClose }: { project: Project; onClose: 
         exit={reduce ? { opacity: 0 } : { y: 40, opacity: 0 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
-        <button data-close onClick={onClose} aria-label={site.ui.closeProject} className="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full border border-ink bg-paper transition-transform hover:rotate-90 hover:bg-accent hover:text-onaccent">
+        <button data-close onClick={onClose} aria-label={copy.close} className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full border border-ink bg-paper transition-transform hover:rotate-90 hover:bg-accent hover:text-onaccent">
           <X size={18} aria-hidden />
         </button>
         <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-ink bg-sand">
@@ -65,16 +86,25 @@ export function ProjectModal({ project, onClose }: { project: Project; onClose: 
         <div className="mt-6 flex flex-wrap items-center gap-2 font-mono text-xs uppercase tracking-widest">
           <span className="rounded-full bg-accent px-3 py-1 text-onaccent">{project.number}</span>
           {project.tags.map((t) => <span key={t} className="rounded-full border border-ink px-3 py-1">{t}</span>)}
+          {project.type === "concept" && <span className="rounded-full bg-sand px-3 py-1">{copy.concept}</span>}
           {project.placeholder && <span className="rounded-full bg-sand px-3 py-1">{site.ui.placeholder}</span>}
         </div>
         <h3 id="project-title" className="mt-4 font-display text-6xl uppercase leading-none md:text-7xl">{project.title}</h3>
         <p className="mt-3 text-lg font-medium">{project.outcome}</p>
         <p className="mt-4 leading-relaxed opacity-80">{project.description}</p>
+        {project.role.trim() && <p className="mt-4"><span className="font-mono text-xs uppercase tracking-widest">{copy.role}</span><span className="mt-1 block">{project.role}</span></p>}
+        {project.whatIDid.length > 0 && (
+          <div className="mt-4">
+            <p className="font-mono text-xs uppercase tracking-widest">{copy.did}</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5">{project.whatIDid.map((item) => <li key={item}>{item}</li>)}</ul>
+          </div>
+        )}
+        {project.result?.trim() && <p className="mt-4"><span className="font-mono text-xs uppercase tracking-widest">{copy.result}</span><span className="mt-1 block">{project.result}</span></p>}
         <div className="mt-8 flex flex-wrap gap-3">
           {project.link && (
-            <a href={project.link} target="_blank" rel="noopener noreferrer" className="rounded-full bg-accent px-6 py-3 font-semibold text-onaccent">{site.ui.visitProject}</a>
+            <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center rounded-full bg-accent px-6 py-3 font-semibold text-onaccent">{copy.visit}</a>
           )}
-          <a href="#contact" onClick={onClose} className="rounded-full border border-ink px-6 py-3 font-semibold transition-colors hover:bg-ink hover:text-paper">{site.ui.similarProject}</a>
+          <a href="#contact" onClick={onClose} className="inline-flex min-h-11 items-center rounded-full border border-ink px-6 py-3 font-semibold transition-colors hover:bg-ink hover:text-paper">{copy.similar}</a>
         </div>
       </motion.div>
     </motion.div>

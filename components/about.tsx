@@ -11,7 +11,7 @@ export function About() {
         <Reveal className="md:col-span-5">
           <div className="relative mx-auto max-w-sm rotate-[-4deg] transition-transform duration-500 hover:rotate-0 md:max-w-none">
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-ink bg-sand">
-              <Image src={a.portrait} alt={a.portraitAlt} fill sizes="(min-width:768px) 40vw, 90vw" className="object-cover" />
+              <Image src={a.portrait} alt={a.portraitAlt} fill sizes="(min-width:768px) 40vw, 90vw" className="object-cover" priority={false} />
             </div>
             <span className="absolute -bottom-5 -right-3 rotate-6 rounded-full border border-ink bg-accent px-5 py-3 font-mono text-xs font-bold uppercase tracking-widest text-onaccent shadow-[4px_4px_0_rgb(var(--ink))] md:-right-6">
               {a.sticker}

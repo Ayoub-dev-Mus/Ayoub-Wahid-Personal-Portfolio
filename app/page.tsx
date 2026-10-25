@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import { visibleProjects } from "@/lib/projects";
 import { TopBar } from "@/components/top-bar";
 import { BottomNav } from "@/components/bottom-nav";
 import { Cursor } from "@/components/cursor";
@@ -18,7 +19,7 @@ export default function Page() {
     name: site.name,
     jobTitle: site.role,
     address: { "@type": "PostalAddress", addressLocality: "Casablanca", addressCountry: "MA" },
-    sameAs: [site.links.upwork],
+    sameAs: [site.links.upwork, site.links.linkedin, site.links.github].filter(Boolean),
   };
   return (
     <>
@@ -29,7 +30,7 @@ export default function Page() {
         <Hero />
         <About />
         <Services />
-        <Work />
+        <Work projects={visibleProjects()} />
         <Results />
         <Process />
         <TechStack />

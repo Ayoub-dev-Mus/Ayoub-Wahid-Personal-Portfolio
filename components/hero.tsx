@@ -73,10 +73,13 @@ export function Hero() {
       </p>
 
       <div className="mt-10 flex flex-wrap gap-3">
-        <a href="#contact" className="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-4 text-base font-semibold text-onaccent transition-transform hover:-translate-y-1 hover:rotate-[-1.5deg]">
+        <a href="#contact" className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-accent px-7 py-4 text-base font-semibold text-onaccent transition-transform hover:-translate-y-1 hover:rotate-[-1.5deg]">
           {h.primary} <ArrowUpRight size={18} className="transition-transform group-hover:rotate-45" aria-hidden />
         </a>
-        <a href="#work" className="group inline-flex items-center gap-2 rounded-full border border-ink px-7 py-4 text-base font-semibold transition-colors hover:bg-ink hover:text-paper">
+        <a href={`/?project=${encodeURIComponent("Shopify store")}#contact`} className="group inline-flex min-h-11 items-center gap-2 rounded-full border border-ink px-7 py-4 text-base font-semibold transition-colors hover:bg-ink hover:text-paper">
+          {h.review} <ArrowDownRight size={18} aria-hidden />
+        </a>
+        <a href="#work" className="group inline-flex min-h-11 items-center gap-2 rounded-full border border-ink px-7 py-4 text-base font-semibold transition-colors hover:bg-ink hover:text-paper">
           {h.secondary} <ArrowDownRight size={18} aria-hidden />
         </a>
       </div>

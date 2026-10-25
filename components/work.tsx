@@ -3,29 +3,35 @@ import { useState } from "react";
 import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { projects, type Project } from "@/content/projects";
+import type { Project } from "@/content/projects";
 import { site } from "@/content/site";
 import { Reveal, SectionLabel } from "./reveal";
-import { ProjectModal } from "./project-modal";
+import { ProjectModal, type ProjectModalLabels } from "./project-modal";
 
 const skins = ["bg-sand", "bg-paper", "bg-accent text-onaccent", "bg-sand", "bg-paper", "bg-accent text-onaccent"];
 
-export function Work() {
+export function Work({ projects, embedded = false, labels, cta = site.work.cta }: { projects: Project[]; embedded?: boolean; labels?: ProjectModalLabels; cta?: string }) {
   const [open, setOpen] = useState<Project | null>(null);
+  if (!projects.length) return null;
+  const sub = `${projects.length} ${projects.length === 1 ? "project" : "projects"}. Click any card for the details.`;
   return (
-    <section id="work" className="px-4 py-24 md:px-8 md:py-32">
-      <Reveal><SectionLabel n="03">{site.work.title}</SectionLabel></Reveal>
-      <Reveal>
-        <h2 className="mt-8 font-display text-[22vw] uppercase leading-[0.85] md:text-[13vw]">{site.ui.selected} <span className="text-accent">{site.ui.work}</span></h2>
-        <p className="mt-4 font-mono text-xs uppercase tracking-widest">{site.work.sub}</p>
-      </Reveal>
+    <section id={embedded ? undefined : "work"} className={embedded ? "" : "px-4 py-24 md:px-8 md:py-32"}>
+      {!embedded && (
+        <>
+          <Reveal><SectionLabel n="03">{site.work.title}</SectionLabel></Reveal>
+          <Reveal>
+            <h2 className="mt-8 font-display text-[22vw] uppercase leading-[0.85] md:text-[13vw]">{site.ui.selected} <span className="text-accent">{site.ui.work}</span></h2>
+            <p className="mt-4 font-mono text-xs uppercase tracking-widest">{sub}</p>
+          </Reveal>
+        </>
+      )}
 
       <div className="mt-12 pb-4">
         {projects.map((p, i) => (
           <article
             key={p.id}
             style={{ ["--top" as string]: `${88 + i * 16}px` }}
-            className={`mb-8 rounded-[2rem] border border-ink p-5 transition-transform duration-500 md:sticky md:top-[var(--top)] md:p-8 md:hover:scale-[1.01] ${skins[i]}`}
+            className={`mb-8 rounded-[2rem] border border-ink p-5 transition-transform duration-500 md:sticky md:top-[var(--top)] md:p-8 md:hover:scale-[1.01] ${skins[i % skins.length]}`}
           >
             <div className="flex items-center justify-between font-mono text-xs uppercase tracking-widest">
               <span className="font-display text-5xl leading-none tracking-normal md:text-7xl">{p.number}</span>
@@ -42,7 +48,7 @@ export function Work() {
                   onClick={() => setOpen(p)}
                   className="group mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 font-semibold text-paper transition-transform hover:-translate-y-0.5 [.bg-accent_&]:bg-onaccent [.bg-accent_&]:text-[#F4EFE6]"
                 >
-                  {site.work.cta}<span className="sr-only"> {p.title}</span>
+                  {cta}<span className="sr-only"> {p.title}</span>
                   <ArrowUpRight size={18} className="transition-transform group-hover:rotate-45" aria-hidden />
                 </button>
               </div>
@@ -58,7 +64,7 @@ export function Work() {
           </article>
         ))}
       </div>
-      <AnimatePresence>{open && <ProjectModal key={open.id} project={open} onClose={() => setOpen(null)} />}</AnimatePresence>
+      <AnimatePresence>{open && <ProjectModal key={open.id} project={open} labels={labels} onClose={() => setOpen(null)} />}</AnimatePresence>
     </section>
   );
 }

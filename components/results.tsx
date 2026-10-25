@@ -7,10 +7,9 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const reduce = useReducedMotion();
-  const [n, setN] = useState(0);
+  const [n, setN] = useState(value);
   useEffect(() => {
-    if (!inView) return;
-    if (reduce) { setN(value); return; }
+    if (!inView || reduce) { setN(value); return; }
     let raf = 0;
     const start = performance.now();
     const step = (t: number) => {

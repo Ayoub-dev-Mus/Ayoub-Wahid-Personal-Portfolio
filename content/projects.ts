@@ -1,4 +1,6 @@
-// Edit projects here. Swap images in /public/images (keep the paths or update them).
+// Edit projects here. Screenshots live in /public/images.
+// TODO: set role, whatIDid, result, and type ("client" when it was a paid engagement).
+// A card is hidden until its image file exists.
 export type Project = {
   id: string;
   number: string;
@@ -10,12 +12,54 @@ export type Project = {
   imageAlt: string;
   link?: string;
   placeholder?: boolean;
+  role: string;
+  whatIDid: string[];
+  result?: string;
+  type: "client" | "concept";
 };
+
+const open: Pick<Project, "role" | "whatIDid" | "type"> = { role: "", whatIDid: [], type: "concept" };
 
 export const projects: Project[] = [
   {
-    id: "magic-spoon",
+    id: "monica-vinader",
     number: "01",
+    title: "Monica Vinader",
+    tags: ["Shopify", "Jewelry"],
+    outcome: "Jewelry store.",
+    description: "Jewelry sold through a Shopify store.",
+    image: "/images/project-monica-vinader.jpg",
+    imageAlt: "Monica Vinader jewelry store",
+    link: "https://www.monicavinader.com/",
+    ...open,
+  },
+  {
+    id: "miansai",
+    number: "02",
+    title: "Miansai",
+    tags: ["Shopify", "Jewelry"],
+    outcome: "Jewelry store.",
+    description: "Jewelry sold through a Shopify store.",
+    image: "/images/project-miansai.jpg",
+    imageAlt: "Miansai jewelry store",
+    link: "https://miansai.com/",
+    ...open,
+  },
+  {
+    id: "gorjana",
+    number: "03",
+    title: "Gorjana",
+    tags: ["Shopify", "Jewelry"],
+    outcome: "Jewelry store.",
+    description: "Jewelry sold through a Shopify store.",
+    image: "/images/project-gorjana.jpg",
+    imageAlt: "Gorjana jewelry store",
+    link: "https://www.gorjana.com/",
+    ...open,
+  },
+  {
+    id: "magic-spoon",
+    number: "04",
     title: "Magic Spoon",
     tags: ["E-commerce", "DTC"],
     outcome: "High-protein cereal shop with bundles and a monthly subscription.",
@@ -24,10 +68,11 @@ export const projects: Project[] = [
     image: "/images/project-magic-spoon.jpg",
     imageAlt: "Magic Spoon homepage with the high-protein cereal hero",
     link: "https://magicspoon.com/",
+    ...open,
   },
   {
     id: "spacegoods",
-    number: "02",
+    number: "05",
     title: "Spacegoods",
     tags: ["E-commerce", "DTC"],
     outcome: "Functional coffee and sleep range, from campaign hero to starter kits.",
@@ -36,10 +81,11 @@ export const projects: Project[] = [
     image: "/images/project-spacegoods.jpg",
     imageAlt: "Spacegoods homepage featuring the Sleep+ campaign",
     link: "https://spacegoods.com/en-int",
+    ...open,
   },
   {
     id: "flare-audio",
-    number: "03",
+    number: "06",
     title: "Flare Audio",
     tags: ["E-commerce", "DTC"],
     outcome: "Earplug and earphone store led by the Flare Zero launch.",
@@ -48,10 +94,11 @@ export const projects: Project[] = [
     image: "/images/project-flare.jpg",
     imageAlt: "Flare Audio homepage with the Flare Zero product hero",
     link: "https://www.flareaudio.com/",
+    ...open,
   },
   {
     id: "away",
-    number: "04",
+    number: "07",
     title: "Away",
     tags: ["E-commerce", "DTC"],
     outcome: "Luggage storefront with a collection hero and shoppable rows.",
@@ -60,10 +107,11 @@ export const projects: Project[] = [
     image: "/images/project-away.jpg",
     imageAlt: "Away homepage showing the Aluminum Edge luggage collection",
     link: "https://www.awaytravel.com/",
+    ...open,
   },
   {
     id: "ribbo",
-    number: "05",
+    number: "08",
     title: "Ribbo",
     tags: ["AI", "SaaS"],
     outcome: "AI customer-service agent for chat, WhatsApp, and handoff.",
@@ -72,10 +120,11 @@ export const projects: Project[] = [
     image: "/images/project-ribbo.jpg",
     imageAlt: "Ribbo homepage with the customer-service agent headline",
     link: "https://ribbo.ai/",
+    ...open,
   },
   {
     id: "legalcentre",
-    number: "06",
+    number: "09",
     title: "LegalCentre",
     tags: ["Services", "Web"],
     outcome: "French company-services site for create, domicile, and close.",
@@ -84,5 +133,6 @@ export const projects: Project[] = [
     image: "/images/project-legalcentre.jpg",
     imageAlt: "LegalCentre homepage for creating and closing a French company",
     link: "https://www.legalcentre.fr/",
+    ...open,
   },
 ];

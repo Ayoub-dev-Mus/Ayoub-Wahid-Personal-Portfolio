@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
   const to = process.env.CONTACT_TO_EMAIL;
   const from = process.env.CONTACT_FROM_EMAIL;
   if (!apiKey || !to || !from) {
-    return fail("Email delivery is not configured yet. Please use the Upwork link to get in touch.", 503);
+    return fail("Email delivery is not configured yet.", 503);
   }
 
   try {
@@ -122,12 +122,12 @@ export async function POST(request: NextRequest) {
       }),
       signal: AbortSignal.timeout(15_000),
     });
-    if (!result.ok) return fail("Email delivery failed. Please try again later or contact me on Upwork.", 502);
+    if (!result.ok) return fail("Email delivery failed. Please try again later.", 502);
     return NextResponse.json({
       success: true,
       message: "Thanks for getting in touch. Your message has been sent, and I'll reply within 24 hours.",
     });
   } catch {
-    return fail("Email delivery is temporarily unavailable. Please try again or contact me on Upwork.", 502);
+    return fail("Email delivery is temporarily unavailable. Please try again.", 502);
   }
 }

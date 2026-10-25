@@ -1,3 +1,5 @@
+import { contactLinks } from "@/lib/site";
+
 // Edit all copy here. Components read from this file only.
 export const site = {
   name: "Ayoub Wahid",
@@ -26,15 +28,19 @@ export const site = {
     work: "work",
     closeProject: "Close project details",
     placeholder: "Placeholder",
-    visitProject: "Visit live project",
+    visitProject: "Visit the live store",
+    myRole: "My role",
+    whatIDid: "What I did",
+    result: "Result",
+    concept: "Concept / redesign",
     similarProject: "Start a project like this",
   },
   links: {
-    upwork: "https://www.upwork.com/freelancers/~019c81c48c7c437e27",
-    // PLACEHOLDERS: replace with real addresses
-    email: "hello@your-domain.com",
-    linkedin: "https://www.linkedin.com/in/your-handle",
-    github: "https://github.com/your-handle",
+    upwork: contactLinks.UPWORK_URL,
+    email: contactLinks.EMAIL,
+    linkedin: contactLinks.LINKEDIN_URL,
+    github: contactLinks.GITHUB_URL,
+    calendar: contactLinks.CALENDAR_URL,
   },
   hero: {
     label: "hello, I'm",
@@ -57,7 +63,9 @@ export const site = {
       { src: "/images/hero-chip-3.jpg", alt: "Paper-cut illustration of a mobile app" },
     ],
     primary: "Start a project",
+    review: "Get a free store review",
     secondary: "See my work",
+    call: "Book a 15-min call",
     marquee: ["Shopify", "Next.js", "NestJS", "Flutter", "React Native", "AI Agents", "Stripe", "Supabase", "n8n"],
     badge: "Shopify · AI · SaaS · Mobile · ",
   },
@@ -65,7 +73,7 @@ export const site = {
     title: "About",
     sticker: "Casablanca, MA",
     portrait: "/images/portrait.jpg",
-    portraitAlt: "Placeholder portrait illustration of Ayoub Wahid",
+    portraitAlt: "Ayoub Wahid, Shopify developer based in Casablanca",
     text: "I combine hands-on engineering with real project leadership. By day I'm a Technical Project Manager at a major telecom operator, where I led the merger of three legacy sales platforms into one unified B2B/B2C app. On the side, I help brands and founders ship Shopify stores, SaaS products, mobile apps and AI tools that real customers depend on.",
     tags: ["Shopify Expert", "Full-Stack", "AI Development", "Mobile Apps", "Project Leadership"],
     languagesLabel: "Languages",
@@ -120,7 +128,7 @@ export const site = {
       },
     ],
   },
-  work: { title: "Featured work", sub: "Six projects. Click any card for the details." , cta: "View project" },
+  work: { title: "Featured work", cta: "View project" },
   results: {
     title: "Results",
     items: [
@@ -142,13 +150,13 @@ export const site = {
   stack: {
     title: "Tech stack",
     groups: [
-      { name: "E-commerce", items: ["Shopify", "Liquid", "Shopify Plus", "WooCommerce", "WordPress"] },
+      { name: "E-commerce", items: ["Shopify", "Liquid", "Shopify Plus"] },
       { name: "Frontend", items: ["React", "Next.js", "TypeScript", "Tailwind"] },
       { name: "Backend", items: ["Node.js", "NestJS", "Python", "FastAPI"] },
       { name: "Mobile", items: ["Flutter", "React Native", "Expo"] },
       { name: "Data", items: ["PostgreSQL", "MySQL", "MongoDB", "Supabase"] },
       { name: "AI", items: ["OpenAI", "Claude", "RAG", "Vector DBs"] },
-      { name: "Cloud", items: ["AWS", "Docker", "Vercel", "CI/CD"] },
+      { name: "Cloud", items: ["Docker", "Vercel", "CI/CD"] },
     ],
   },
   contact: {
@@ -166,11 +174,19 @@ export const site = {
     sent: "Message sent.",
     sendError: "The message could not be sent. Please try again.",
     connectionError: "Could not reach the server. Check your connection and try again.",
+    validation: {
+      name: "Enter a name between 2 and 100 characters.",
+      email: "Enter a valid email address.",
+      projectType: "Select a project type.",
+      message: "Write a message between 10 and 5,000 characters.",
+      summary: "Check the highlighted fields and try again.",
+    },
     headline: ["Got a project?", "Let's build it."],
     text: "Send a short description of what you have in mind, and I'll reply with smart questions, a clear plan and a realistic timeline.",
     projectTypes: ["Shopify store", "AI agent", "SaaS or web app", "Mobile app", "Other"],
-    budgets: ["Under $1,000", "$1,000 – $3,000", "$3,000 – $8,000", "$8,000+", "Not sure yet"],
-    upwork: "Hire me on Upwork",
+    budgets: ["Not sure yet", "$1,000 – $3,000", "$3,000 – $8,000", "$8,000+"],
+    call: "Book a 15-min call",
+    upwork: "Upwork",
   },
   footer: { copy: "© 2026 Ayoub Wahid · Casablanca, Morocco", top: "Back to top" },
 };
