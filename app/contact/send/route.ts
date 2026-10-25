@@ -82,7 +82,7 @@ function telegramText(input: { name: string; email: string; projectType: string;
 
 async function notifyTelegram(token: string, chatId: string, input: { name: string; email: string; projectType: string; budget: string; message: string }) {
   if (!token || !chatId) return;
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+  const result = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -93,6 +93,7 @@ async function notifyTelegram(token: string, chatId: string, input: { name: stri
     }),
     signal: AbortSignal.timeout(10_000),
   });
+  if (!result.ok) console.error("Telegram alert failed", result.status);
 }
 
 function enquiryEmail(input: { name: string; email: string; projectType: string; budget: string; message: string }) {
