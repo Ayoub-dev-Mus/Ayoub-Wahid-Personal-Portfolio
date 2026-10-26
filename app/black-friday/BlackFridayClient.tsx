@@ -1,25 +1,51 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./black-friday.css";
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+    fbq?: (...args: unknown[]) => void;
+  }
+}
 
 /* ===== À COMPLÉTER AVANT LA MISE EN LIGNE ===== */
 const CONFIG = {
   price: "249", // prix affiché
   currency: "€", // € ou $
+  payment: "virement ou lien de paiement",
+  slotsLeft: null as number | null,
   instagram: "", // ex: "ayoub.pages" (sans @)
   whatsapp: "", // ex: "212600000000" (indicatif + numéro, sans +)
   email: "contact@wahidayoub.com",
   portfolio: "https://ayoub-wahid-personal-portfolio.vercel.app",
-  work: ["Monica Vinader", "Miansai", "Gorjana", "Away", "Magic Spoon", "Space Goods"], // vérifie que tu peux les citer
+  work: [
+    { name: "Monica Vinader" },
+    { name: "Miansai" },
+    { name: "Gorjana" },
+    { name: "Away" },
+    { name: "Magic Spoon" },
+    { name: "Space Goods" },
+  ] as { name: string; img?: string; url?: string; note?: string }[],
+  testimonials: [] as { quote: string; name: string; role: string }[],
   endpoint: "/black-friday/send", // POST JSON. Vide = message à copier.
   photo: "/ayoub-wahid.jpg",
   cutoff: new Date(2026, 10, 13, 23, 59, 59).getTime(), // fin des commandes
 };
 
 type Lang = "fr" | "en";
-type Lead = { name: string; shop: string; date: string; contact: string; lang: Lang };
+type Lead = {
+  name: string;
+  shop: string;
+  date: string;
+  contact: string;
+  lang: Lang;
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+};
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const L: Record<Lang, any> = {
@@ -32,7 +58,9 @@ const L: Record<Lang, any> = {
     t1: "Livrée en 3 jours", t2: "Pensée pour le téléphone", t3: "Un tour de modifications inclus", t4: "Rien à préparer : un lien suffit",
     chipa: "Aperçu gratuit", chipb: "Prête en 3 jours", chipc: "Compte à rebours réel",
     ph1: "Offrez des bijoux <em>qui durent.</em>", ph2: "Notre collection d’hiver est à -25 % jusqu’au 29 novembre.", ph3: "Découvrir l’offre",
-    pr_e: "Mon travail", pr_h: "Des boutiques en ligne, <em>des pages qui vendent.</em>", pr_l: "Projets sur lesquels j’ai travaillé : boutiques de bijoux, de mode et de marques en ligne.", pr_p: "Voir mes réalisations →", wa: "Plutôt WhatsApp ?",
+    pr_e: "Mon travail", pr_h: "Des boutiques en ligne, <em>des pages qui vendent.</em>", pr_l: "Projets sur lesquels j’ai travaillé : boutiques de bijoux, de mode et de marques en ligne.", pr_p: "Voir mes réalisations →", pr_note: "Shopify · e-commerce", wa: "Plutôt WhatsApp ?",
+    v_e: "Ils en parlent", v_h: "Ce qu’ils en <em>disent.</em>",
+    for: "Fonctionne pour :",
     niches: ["Bijoux", "Mode", "Cosmétique", "Déco", "Accessoires", "Épicerie fine"],
     p_e: "Le constat", p_h: "Votre page d’accueil n’est pas <em>une page Black Friday.</em>", p_l: "Elle présente toute la boutique. Pendant le Black Friday, vos visiteurs veulent comprendre l’offre en 3 secondes et commander.",
     p_bl: "Page classique", p_bp: "Trop d’options, offre noyée, bouton d’achat loin sous la ligne de flottaison. Le visiteur hésite, puis part.",
@@ -46,20 +74,27 @@ const L: Record<Lang, any> = {
     o_e: "L’offre", o_h: "Une page Black Friday, <em>clé en main.</em>", o_u: "la page", o_p: "Acompte de 50 % pour démarrer, le solde à la livraison.",
     inclist: ["Aperçu visuel gratuit sous 24 h, avant tout paiement", "Page livrée en 3 jours", "Adaptée au téléphone et à l’ordinateur", "Compte à rebours et bandeau d’offre", "Un tour de modifications", "Mise en ligne avec vous"],
     o_cta: "Je veux mon aperçu →", o_s: "Dernière commande : 13 novembre, pour une mise en ligne avant le 27.",
+    payq: "Comment je paie ?", paya: (method: string) => "Facture envoyée avant tout paiement. 50 % à la commande, le solde à la livraison, par " + method + " sécurisé.",
+    slots: (n: number) => "Il reste " + n + " places sur 6 avant le 13 novembre",
     a_e: "Qui je suis", a_h: "Ayoub Wahid, <em>développeur et créateur de pages.</em>",
     a_p1: "Je conçois et développe des sites et des boutiques en ligne, notamment pour des marques de bijoux et de mode. Mon travail : des pages claires, rapides et faites pour vendre.",
-    a_p2: "Je réponds moi-même à chaque message, en moins d’une heure. Vous parlez à la personne qui construit votre page.",
+    a_p2: "Je réponds moi-même à chaque message, sous 24 h. Vous parlez à la personne qui construit votre page.",
     q_e: "Questions", q_h: "Ce que vous vous <em>demandez peut-être.</em>",
     faq: [["Pourquoi un aperçu gratuit ?", "Parce que vous devez voir votre page avant de décider. Si l’idée ne vous plaît pas, vous ne payez rien."], ["Je n’ai pas de site, c’est possible ?", "Oui. La page remplace le lien de votre bio Instagram. Le bouton de commande utilise ce que vous avez déjà : WhatsApp, lien de paiement ou formulaire."], ["Combien de temps pour la page ?", "3 jours après réception de vos textes et images. Pour être en ligne avant le Black Friday du 27, la dernière commande est le 13 novembre."], ["Comment se passe le paiement ?", "50 % à la commande, 50 % à la livraison."], ["Je travaille avec Shopify, ça marche ?", "Oui. La page peut s’intégrer à votre boutique Shopify ou vivre à côté, selon ce qui vous convient."], ["Et si je veux faire modifier la page ensuite ?", "Un tour de modifications est inclus. Ensuite, je vous fais un devis simple pour chaque changement."]],
-    c_e: "Prochaine étape", c_h: "Je prépare votre aperçu <em>gratuit.</em>", c_l: "Quatre champs, trente secondes. Je vous réponds sous 24 h avec une idée visuelle pour votre boutique.",
+    c_e: "Prochaine étape", c_h: "Je prépare votre aperçu <em>gratuit.</em>", c_l: "Deux champs, vingt secondes. Un lien et un moyen de vous répondre suffisent.",
     cl: ["Aperçu gratuit, sans engagement", "Réponse sous 24 h", "Livrée en 3 jours si vous l’aimez"],
-    f1: "Votre prénom", f2: "Lien de votre boutique ou de votre compte Instagram", f2p: "instagram.com/votre-boutique", f3: "Date de votre promotion", f3p: "ex. 27 novembre", f3s: "Optionnel.", consent: "Vos informations ne servent qu’à vous répondre. Pas de newsletter, pas de revente.", f4: "WhatsApp ou email", f4p: "Comment je vous réponds ?", f5: "Recevoir mon aperçu gratuit",
-    e1: "Ajoutez le lien de votre boutique ou de votre compte.", e2: "Ajoutez un WhatsApp ou un email pour que je puisse vous répondre.",
+    f1: "Votre prénom", f2: "Lien de votre boutique ou de votre compte Instagram", f2p: "instagram.com/votre-boutique", f3: "Date de votre promotion", f3p: "ex. 27 novembre", f3s: "Optionnel.", consent: "Vos informations ne servent qu’à vous répondre. Pas de newsletter, pas de revente.", ctrl: "Ayoub Wahid · données utilisées uniquement pour te répondre",     f4: "WhatsApp, e-mail ou Instagram", f4p: "WhatsApp, e-mail ou Instagram", f5: "Recevoir mon aperçu gratuit",
+    more: "Ajouter des détails (optionnel)", less: "Masquer les détails", sending: "Envoi…",
+    qwa: "WhatsApp", qmail: "E-mail", qig: "Instagram",
+    pwa: "+212 6 00 00 00 00", pmail: "vous@email.com", pig: "@votrecompte",
+    waMsg: "Bonjour Ayoub, je veux un aperçu gratuit de page Black Friday.",
+    e1: "Ajoutez le lien de votre boutique ou de votre compte.", e2: "Ajoutez un WhatsApp, un e-mail ou un Instagram.",
     r1: "Presque terminé !", r2: "Envoyez ce message pour que je reçoive votre demande.", r3: "Copier le message", copied: "Message copié ✓", copyfail: "Sélectionnez le texte ci-dessus et copiez-le.", sent: "Demande envoyée ✓ Je vous réponds sous 24 h.",
-    msgtpl: (d: Lead) => { return "Bonjour Ayoub, je souhaite recevoir un aperçu gratuit de page Black Friday.\nPrénom : " + d.name + "\nBoutique : " + d.shop + (d.date ? "\nDate de la promo : " + d.date : "") + "\nContact : " + d.contact; },
+    msgtpl: (d: Lead) => { return "Bonjour Ayoub, je souhaite recevoir un aperçu gratuit de page Black Friday.\nPrénom : " + d.name + "\nBoutique : " + d.shop + (d.date ? "\nDate de la promo : " + d.date : "") + "\nContact : " + d.contact + "\nLangue : " + d.lang + (d.utm_source ? "\nSource : " + d.utm_source : "") + (d.utm_medium ? "\nSupport : " + d.utm_medium : "") + (d.utm_campaign ? "\nCampagne : " + d.utm_campaign : "") + "\nOffre : " + CONFIG.price + " " + CONFIG.currency; },
     lIg: "Ouvrir Instagram", lWa: "Envoyer sur WhatsApp", lMail: "Écrire par email",
     foot1: "Pages d’atterrissage pour boutiques en ligne", foot2: "Les pages des exemples sont celles de boutiques fictives.",
-    stk: "Commandes jusqu’au <b>13 nov.</b>", stkc: "Mon aperçu", cdl: "j", cdd: "jours restants"
+    stk: "Commandes jusqu’au <b>13 nov.</b>", stkc: "Mon aperçu", cdl: "j", cdd: "jours restants",
+    cdj: "j", cdh: "h", cdm: "min", cds: "s"
   },
   en: {
     bar: "Black Friday orders are open until November 13:",
@@ -70,7 +105,9 @@ const L: Record<Lang, any> = {
     t1: "Delivered in 3 days", t2: "Built for phones", t3: "One revision round included", t4: "Nothing to prepare: one link is enough",
     chipa: "Free preview", chipb: "Ready in 3 days", chipc: "Real countdown",
     ph1: "Gifts of jewelry <em>that last.</em>", ph2: "Our winter collection is 25% off until November 29.", ph3: "See the offer",
-    pr_e: "My work", pr_h: "Online shops, <em>pages that sell.</em>", pr_l: "Projects I have worked on: jewelry, fashion and online brands.", pr_p: "See my work →", wa: "Prefer WhatsApp?",
+    pr_e: "My work", pr_h: "Online shops, <em>pages that sell.</em>", pr_l: "Projects I have worked on: jewelry, fashion and online brands.", pr_p: "See my work →", pr_note: "Shopify · e-commerce", wa: "Prefer WhatsApp?",
+    v_e: "In their words", v_h: "What they <em>say.</em>",
+    for: "Works for:",
     niches: ["Jewelry", "Fashion", "Beauty", "Home", "Accessories", "Gourmet food"],
     p_e: "The problem", p_h: "Your homepage is not <em>a Black Friday page.</em>", p_l: "It presents the whole shop. During Black Friday, visitors want to understand the offer in 3 seconds and buy.",
     p_bl: "Regular page", p_bp: "Too many options, the offer is buried, the buy button sits far below the fold. Visitors hesitate, then leave.",
@@ -84,20 +121,27 @@ const L: Record<Lang, any> = {
     o_e: "The offer", o_h: "A Black Friday page, <em>ready to use.</em>", o_u: "per page", o_p: "50% deposit to start, the rest on delivery.",
     inclist: ["Free visual preview within 24 hours, before any payment", "Page delivered in 3 days", "Works on phone and desktop", "Countdown and offer banner", "One round of changes", "Launched together with you"],
     o_cta: "I want my preview →", o_s: "Last order: November 13, to be live before the 27th.",
+    payq: "How do I pay?", paya: () => "Invoice sent before any payment. 50% when you order, the balance on delivery, by bank transfer or a secure payment link.",
+    slots: (n: number) => n + " of 6 spots left before November 13",
     a_e: "Who I am", a_h: "Ayoub Wahid, <em>developer and page builder.</em>",
     a_p1: "I design and build websites and online shops, including for jewelry and fashion brands. My work: pages that are clear, fast and made to sell.",
-    a_p2: "I answer every message myself, within an hour. You talk to the person who builds your page.",
+    a_p2: "I answer every message myself, within 24 hours. You talk to the person who builds your page.",
     q_e: "Questions", q_h: "What you might <em>be wondering.</em>",
     faq: [["Why a free preview?", "Because you should see your page before you decide. If you don’t like the idea, you pay nothing."], ["I don’t have a website. Is that possible?", "Yes. The page replaces the link in your Instagram bio. The order button uses what you already have: WhatsApp, a payment link or a form."], ["How long does the page take?", "3 days after I receive your texts and images. To be live before Black Friday on the 27th, the last order is November 13."], ["How does payment work?", "50% when you order, 50% on delivery."], ["I use Shopify. Does it work?", "Yes. The page can plug into your Shopify store or live next to it, whichever suits you."], ["What if I want changes later?", "One round of changes is included. After that, I send a simple quote for each change."]],
-    c_e: "Next step", c_h: "I’ll prepare your <em>free preview.</em>", c_l: "Four fields, thirty seconds. I reply within 24 hours with a visual idea for your shop.",
+    c_e: "Next step", c_h: "I’ll prepare your <em>free preview.</em>", c_l: "Two fields, twenty seconds. A link and a way to reply are enough.",
     cl: ["Free preview, no commitment", "Reply within 24 hours", "Delivered in 3 days if you like it"],
-    f1: "Your first name", f2: "Link to your shop or Instagram account", f2p: "instagram.com/your-shop", f3: "Date of your promotion", f3p: "e.g. November 27", f3s: "Optional.", consent: "Your details are only used to reply to you. No newsletter, no resale.", f4: "WhatsApp or email", f4p: "How should I reply?", f5: "Get my free preview",
-    e1: "Add the link to your shop or account.", e2: "Add a WhatsApp or an email so I can reply.",
+    f1: "Your first name", f2: "Link to your shop or Instagram account", f2p: "instagram.com/your-shop", f3: "Date of your promotion", f3p: "e.g. November 27", f3s: "Optional.", consent: "Your details are only used to reply to you. No newsletter, no resale.", ctrl: "Ayoub Wahid · details used only to reply to you",     f4: "WhatsApp, email or Instagram", f4p: "WhatsApp, email or Instagram", f5: "Get my free preview",
+    more: "Add details (optional)", less: "Hide details", sending: "Sending…",
+    qwa: "WhatsApp", qmail: "Email", qig: "Instagram",
+    pwa: "+212 6 00 00 00 00", pmail: "you@email.com", pig: "@youraccount",
+    waMsg: "Hello Ayoub, I would like a free Black Friday page preview.",
+    e1: "Add the link to your shop or account.", e2: "Add a WhatsApp, an email or an Instagram.",
     r1: "Almost done!", r2: "Send this message so I receive your request.", r3: "Copy the message", copied: "Message copied ✓", copyfail: "Select the text above and copy it.", sent: "Request sent ✓ I’ll reply within 24 hours.",
-    msgtpl: (d: Lead) => { return "Hello Ayoub, I’d like a free Black Friday page preview.\nFirst name: " + d.name + "\nShop: " + d.shop + (d.date ? "\nPromo date: " + d.date : "") + "\nContact: " + d.contact; },
+    msgtpl: (d: Lead) => { return "Hello Ayoub, I’d like a free Black Friday page preview.\nFirst name: " + d.name + "\nShop: " + d.shop + (d.date ? "\nPromo date: " + d.date : "") + "\nContact: " + d.contact + "\nLanguage: " + d.lang + (d.utm_source ? "\nSource: " + d.utm_source : "") + (d.utm_medium ? "\nMedium: " + d.utm_medium : "") + (d.utm_campaign ? "\nCampaign: " + d.utm_campaign : "") + "\nOffer: " + CONFIG.price + " " + CONFIG.currency; },
     lIg: "Open Instagram", lWa: "Send on WhatsApp", lMail: "Write by email",
     foot1: "Landing pages for online shops", foot2: "The sample pages show fictional shops.",
-    stk: "Orders until <b>Nov 13</b>", stkc: "My preview", cdl: "d", cdd: "days left"
+    stk: "Orders until <b>Nov 13</b>", stkc: "My preview", cdl: "d", cdd: "days left",
+    cdj: "d", cdh: "h", cdm: "min", cds: "s"
   }
 };
 
@@ -105,56 +149,173 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
+type Hint = "" | "wa" | "mail" | "ig";
+type FieldErr = "" | "shop" | "contact";
+const LEAD_KEY = "bf-lead";
+
+function contactMode(value: string, hint: Hint): "email" | "tel" | "text" {
+  const v = value.trim();
+  if (v.includes("@") && v.includes(".")) return "email";
+  if (/^[\d+\s]+$/.test(v) && /\d/.test(v)) return "tel";
+  if (v) return "text";
+  if (hint === "mail") return "email";
+  if (hint === "wa") return "tel";
+  return "text";
+}
+
+function revealField(el: HTMLElement | null) {
+  if (!el) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+}
+
 export default function BlackFridayClient() {
   const [lang, setLang] = useState<Lang>("fr");
   const t = L[lang];
-  const [now, setNow] = useState<number | null>(null);
   const [stuck, setStuck] = useState(false);
+  const [utm, setUtm] = useState({ utm_source: "", utm_medium: "", utm_campaign: "" });
 
-  const [hShop, setHShop] = useState("");
-  const [hContact, setHContact] = useState("");
-  const [hErr, setHErr] = useState("");
   const [name, setName] = useState("");
   const [shop, setShop] = useState("");
   const [date, setDate] = useState("");
   const [contact, setContact] = useState("");
-  const [err, setErr] = useState("");
+  const [hint, setHint] = useState<Hint>("");
+  const [details, setDetails] = useState(false);
+  const [hErr, setHErr] = useState<FieldErr>("");
+  const [mErr, setMErr] = useState<FieldErr>("");
+  const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<{ msg: string; sent: boolean } | null>(null);
   const [copied, setCopied] = useState("");
   const resRef = useRef<HTMLDivElement>(null);
   const msgRef = useRef<HTMLPreElement>(null);
+  const hShopRef = useRef<HTMLInputElement>(null);
+  const hContactRef = useRef<HTMLInputElement>(null);
+  const mShopRef = useRef<HTMLInputElement>(null);
+  const mContactRef = useRef<HTMLInputElement>(null);
+  const sending = useRef(false);
+  const skipSave = useRef(true);
+  const barRef = useRef<HTMLElement>(null);
+  const dRef = useRef<HTMLElement>(null);
+  const hRef = useRef<HTMLElement>(null);
+  const mRef = useRef<HTMLElement>(null);
+  const sRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    setNow(Date.now());
-    const id = setInterval(() => setNow(Date.now()), 1000);
+    const q = new URLSearchParams(window.location.search);
+    setUtm({
+      utm_source: (q.get("utm_source") || "").slice(0, 120),
+      utm_medium: (q.get("utm_medium") || "").slice(0, 120),
+      utm_campaign: (q.get("utm_campaign") || "").slice(0, 120),
+    });
+  }, []);
+
+  useEffect(() => {
+    const write = (el: HTMLElement | null, value: string) => {
+      if (el && el.textContent !== value) el.textContent = value;
+    };
+    const tick = () => {
+      const ms = Math.max(0, CONFIG.cutoff - Date.now());
+      const total = Math.floor(ms / 1000);
+      const d = Math.floor(total / 86400);
+      const h = Math.floor((total % 86400) / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = total % 60;
+      const closed = lang === "fr" ? "Commandes fermées" : "Orders closed";
+      const unit = lang === "fr" ? "j" : "d";
+      write(barRef.current, ms === 0 ? closed : `${d} ${unit} ${pad(h)}:${pad(m)}:${pad(s)}`);
+      write(dRef.current, ms === 0 ? "0" : String(d));
+      write(hRef.current, pad(h));
+      write(mRef.current, pad(m));
+      write(sRef.current, pad(s));
+    };
+    tick();
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
+  }, [lang]);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(LEAD_KEY);
+      if (raw) {
+        const saved: unknown = JSON.parse(raw);
+        if (saved && typeof saved === "object") {
+          const row = saved as Record<string, unknown>;
+          const text = (key: string) => typeof row[key] === "string" ? row[key] : "";
+          setName(text("name"));
+          setShop(text("shop"));
+          setDate(text("date"));
+          setContact(text("contact"));
+          if (text("name") || text("date")) setDetails(true);
+        }
+      }
+    } catch { /* private mode */ }
+    skipSave.current = false;
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setStuck(window.scrollY > 520);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (skipSave.current) return;
+    try { sessionStorage.setItem(LEAD_KEY, JSON.stringify({ name, shop, date, contact })); } catch { /* private mode */ }
+  }, [name, shop, date, contact]);
 
-  const countdown = useMemo(() => {
-    if (now === null) return "";
-    const ms = Math.max(0, CONFIG.cutoff - now);
-    if (!ms) return lang === "fr" ? "Commandes fermées" : "Orders closed";
-    const s = Math.floor(ms / 1000);
-    const d = Math.floor(s / 86400);
-    const h = Math.floor((s % 86400) / 3600);
-    const m = Math.floor((s % 3600) / 60);
-    return `${d} ${lang === "fr" ? "j" : "d"} ${pad(h)}:${pad(m)}:${pad(s % 60)}`;
-  }, [now, lang]);
+  useEffect(() => {
+    const contact = document.getElementById("contact");
+    const seen = { current: false };
+    const keys = { current: false };
+    let frame = 0;
+    const sync = () => {
+      const show = window.scrollY > 480 && !seen.current && !keys.current;
+      setStuck((prev) => (prev === show ? prev : show));
+    };
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        sync();
+      });
+    };
+    const io = contact
+      ? new IntersectionObserver(([entry]) => {
+          seen.current = entry.isIntersecting;
+          sync();
+        }, { threshold: 0.2 })
+      : null;
+    if (contact && io) io.observe(contact);
+    const vv = window.visualViewport;
+    const onViewport = () => {
+      keys.current = !!vv && vv.height < window.innerHeight * 0.75;
+      sync();
+    };
+    vv?.addEventListener("resize", onViewport);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      vv?.removeEventListener("resize", onViewport);
+      io?.disconnect();
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
 
   async function submit(data: Lead, slot: "hero" | "main") {
-    const setE = slot === "hero" ? setHErr : setErr;
-    if (!data.shop.trim()) return setE(t.e1);
-    if (!data.contact.trim()) return setE(t.e2);
+    if (sending.current) return;
+    const setE = slot === "hero" ? setHErr : setMErr;
+    const shopEl = slot === "hero" ? hShopRef.current : mShopRef.current;
+    const contactEl = slot === "hero" ? hContactRef.current : mContactRef.current;
+    if (!data.shop.trim()) {
+      setE("shop");
+      shopEl?.focus();
+      revealField(shopEl);
+      return;
+    }
+    if (!data.contact.trim()) {
+      setE("contact");
+      contactEl?.focus();
+      revealField(contactEl);
+      return;
+    }
     setE("");
-    setShop(data.shop);
-    setContact(data.contact);
+    sending.current = true;
+    setBusy(true);
     const msg: string = t.msgtpl(data);
     let sent = false;
     if (CONFIG.endpoint) {
@@ -170,8 +331,18 @@ export default function BlackFridayClient() {
       }
     }
     setResult({ msg, sent });
-    setTimeout(() => resRef.current?.scrollIntoView({ block: "center", behavior: "smooth" }), 50);
+    try { window.gtag?.("event", "generate_lead"); } catch { /* analytics is optional */ }
+    try { window.fbq?.("track", "Lead"); } catch { /* analytics is optional */ }
+    sending.current = false;
+    setBusy(false);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setTimeout(() => resRef.current?.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }), 50);
   }
+
+  const mode = contactMode(contact, hint);
+  const contactPlaceholder = !contact.trim() && hint === "wa" ? t.pwa : !contact.trim() && hint === "mail" ? t.pmail : !contact.trim() && hint === "ig" ? t.pig : t.f4p;
+  const contactComplete = mode === "email" ? "email" : mode === "tel" ? "tel" : "off";
+  const waHref = CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t.waMsg)}` : "";
 
   async function copy() {
     try {
@@ -197,7 +368,7 @@ export default function BlackFridayClient() {
       <div className="bar">
         <div className="w">
           <span>{t.bar}</span>
-          <b suppressHydrationWarning>{countdown}</b>
+          <b ref={barRef} suppressHydrationWarning />
         </div>
       </div>
 
@@ -205,7 +376,7 @@ export default function BlackFridayClient() {
         <div className="w">
           <a className="brand" href="#top">
             <span className="ava">
-              <Image src={CONFIG.photo} alt="" width={76} height={76} />
+              <Image src={CONFIG.photo} alt={lang === "fr" ? "Photo d’Ayoub Wahid" : "Photo of Ayoub Wahid"} width={76} height={76} sizes="38px" priority />
             </span>
             <span>Ayoub Wahid</span>
           </a>
@@ -219,9 +390,10 @@ export default function BlackFridayClient() {
         </div>
       </nav>
 
+      <main>
       <header className="hero" id="top">
         <div className="w">
-          <div>
+          <div className="copy">
             <p className="eyebrow">{t.eyebrow}</p>
             <h1 dangerouslySetInnerHTML={html(t.h1)} />
             <p className="lede">{t.lede}</p>
@@ -230,27 +402,36 @@ export default function BlackFridayClient() {
               noValidate
               onSubmit={(e) => {
                 e.preventDefault();
-                submit({ name, shop: hShop, date, contact: hContact, lang }, "hero");
+                submit({ name, shop, date, contact, lang, ...utm }, "hero");
               }}
             >
-              <input aria-label="shop" inputMode="url" autoComplete="off" placeholder={t.f2p} value={hShop} onChange={(e) => setHShop(e.target.value)} />
-              <input aria-label="contact" autoComplete="off" placeholder={t.f4p} value={hContact} onChange={(e) => setHContact(e.target.value)} />
-              <button className="btn" type="submit">{t.cta}</button>
+              <div className="field">
+                <input ref={hShopRef} aria-label={t.f2} type="text" inputMode="url" autoCapitalize="none" autoCorrect="off" spellCheck={false} enterKeyHint="next" autoComplete="url" placeholder={t.f2p} value={shop} aria-invalid={hErr === "shop" || undefined} aria-describedby={hErr === "shop" ? "h-shop-err" : undefined} onChange={(e) => setShop(e.target.value)} onFocus={(e) => revealField(e.currentTarget)} />
+                {hErr === "shop" && <p id="h-shop-err" className="err" role="alert">{t.e1}</p>}
+              </div>
+              <div className="field">
+                <input ref={hContactRef} aria-label={t.f4} type="text" inputMode={mode} autoCapitalize="none" autoCorrect="off" spellCheck={false} enterKeyHint="send" autoComplete={contactComplete} placeholder={contactPlaceholder} value={contact} aria-invalid={hErr === "contact" || undefined} aria-describedby={hErr === "contact" ? "h-contact-err" : undefined} onChange={(e) => setContact(e.target.value)} onFocus={(e) => revealField(e.currentTarget)} />
+                <div className="quick" role="group" aria-label={t.f4}>
+                  <button type="button" aria-pressed={hint === "wa"} onClick={() => setHint("wa")}>{t.qwa}</button>
+                  <button type="button" aria-pressed={hint === "mail"} onClick={() => setHint("mail")}>{t.qmail}</button>
+                  <button type="button" aria-pressed={hint === "ig"} onClick={() => setHint("ig")}>{t.qig}</button>
+                </div>
+                {hErr === "contact" && <p id="h-contact-err" className="err" role="alert">{t.e2}</p>}
+              </div>
+              <button className="btn" type="submit" disabled={busy}>{busy ? t.sending : t.cta}</button>
             </form>
-            <p className="err" role="alert">{hErr}</p>
             <p className="hnote">
-              <span>{t.ctanote}</span>{" "}
-              {CONFIG.whatsapp && (
-                <a href={`https://wa.me/${CONFIG.whatsapp}`} target="_blank" rel="noopener noreferrer">{t.wa}</a>
-              )}
+              {waHref && <a href={waHref} target="_blank" rel="noopener noreferrer">{t.wa}</a>}
+              {waHref && " "}
+              <span>{t.ctanote}</span>
             </p>
-            <ul className="trust">
-              <li>{t.t1}</li><li>{t.t2}</li><li>{t.t3}</li><li>{t.t4}</li>
-            </ul>
-            <div className="who">
-              <Image src={CONFIG.photo} alt="Ayoub Wahid" width={112} height={112} />
-              <span><b>Ayoub Wahid</b>{lang === "fr" ? "Développeur indépendant · Casablanca. Je réponds moi-même." : "Independent developer · Casablanca. I reply myself."}</span>
-            </div>
+          </div>
+          <ul className="trust">
+            <li>{t.t1}</li><li>{t.t2}</li><li>{t.t3}</li><li>{t.t4}</li>
+          </ul>
+          <div className="who">
+            <Image src={CONFIG.photo} alt={lang === "fr" ? "Photo d’Ayoub Wahid" : "Photo of Ayoub Wahid"} width={112} height={112} sizes="56px" loading="lazy" />
+            <span><b>Ayoub Wahid</b>{lang === "fr" ? "Développeur indépendant · Casablanca. Je réponds moi-même." : "Independent developer · Casablanca. I reply myself."}</span>
           </div>
           <div className="stage" aria-hidden="true">
             <div className="chip a">{t.chipa}</div>
@@ -262,7 +443,10 @@ export default function BlackFridayClient() {
                 <div className="ph-h" dangerouslySetInnerHTML={html(t.ph1)} />
                 <div className="ph-p">{t.ph2}</div>
                 <div className="ph-cd">
-                  <div>12<small>j</small></div><div>08<small>h</small></div><div>41<small>min</small></div><div>06<small>s</small></div>
+                  <div><b ref={dRef} suppressHydrationWarning>–</b><small>{t.cdj}</small></div>
+                  <div><b ref={hRef} suppressHydrationWarning>–</b><small>{t.cdh}</small></div>
+                  <div><b ref={mRef} suppressHydrationWarning>–</b><small>{t.cdm}</small></div>
+                  <div><b ref={sRef} suppressHydrationWarning>–</b><small>{t.cds}</small></div>
                 </div>
                 <div className="ph-img">
                   <svg viewBox="0 0 120 120"><circle cx="60" cy="72" r="30" fill="none" stroke="currentColor" strokeWidth="7" /><path d="M60 26 L72 40 L60 50 L48 40 Z" fill="currentColor" /></svg>
@@ -280,7 +464,10 @@ export default function BlackFridayClient() {
       </header>
 
       <div className="niches">
-        <div className="w">{t.niches.map((n: string) => <span key={n}>{n}</span>)}</div>
+        <div className="w">
+          <p className="for">{t.for}</p>
+          <div className="row">{t.niches.map((n: string) => <span key={n}>{n}</span>)}</div>
+        </div>
       </div>
 
       <section className="sec" id="proof">
@@ -291,9 +478,24 @@ export default function BlackFridayClient() {
             <p className="lede">{t.pr_l}</p>
           </header>
           <div className="work">
-            {CONFIG.work.map((n) => (
-              <div key={n}>{n}<span>Shopify · e-commerce</span></div>
-            ))}
+            {CONFIG.work.map((item) => {
+              const body = (
+                <>
+                  {item.img ? (
+                    <span className="shot">
+                      <Image src={item.img} alt={item.name} fill sizes="(max-width: 860px) 100vw, 360px" loading="lazy" />
+                    </span>
+                  ) : null}
+                  {item.name}
+                  <span>{item.note || t.pr_note}</span>
+                </>
+              );
+              return item.url ? (
+                <a key={item.name} href={item.url} target="_blank" rel="noopener noreferrer">{body}</a>
+              ) : (
+                <div key={item.name}>{body}</div>
+              );
+            })}
           </div>
           {CONFIG.portfolio && (
             <p style={{ marginTop: 26 }}>
@@ -302,6 +504,25 @@ export default function BlackFridayClient() {
           )}
         </div>
       </section>
+
+      {CONFIG.testimonials.length > 0 && (
+        <section className="sec" aria-label={t.v_e}>
+          <div className="w">
+            <header>
+              <p className="eyebrow">{t.v_e}</p>
+              <h2 dangerouslySetInnerHTML={html(t.v_h)} />
+            </header>
+            <div className="quotes">
+              {CONFIG.testimonials.map((item) => (
+                <blockquote key={`${item.name}-${item.quote}`}>
+                  <p>{item.quote}</p>
+                  <footer><b>{item.name}</b><span>{item.role}</span></footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="sec">
         <div className="w">
@@ -373,7 +594,7 @@ export default function BlackFridayClient() {
             <div className="mc" style={{ background: "#F6EBD3" }}>
               <div className="scr">
                 <div className="b" style={{ background: "#2A2118", color: "#F6E7C4" }}>Black Friday · -25 %</div>
-                <h4 style={{ fontFamily: "Georgia,serif", fontWeight: 600 }}>Offrez des bijoux qui durent.</h4>
+                <p className="mh" style={{ fontFamily: "Georgia,serif", fontWeight: 600 }}>Offrez des bijoux qui durent.</p>
                 <div className="r" style={{ background: "#F2E9DB" }} /><div className="p" /><div className="q" style={{ background: "#B8893B" }} />
               </div>
               <div className="cap">{t.x1}</div>
@@ -381,7 +602,7 @@ export default function BlackFridayClient() {
             <div className="mc" style={{ background: "#E6E6DF" }}>
               <div className="scr">
                 <div className="b" style={{ background: "#0D0D0D", color: "#E8FF3A" }}>Drop Black Friday</div>
-                <h4 style={{ textTransform: "uppercase", fontWeight: 900 }}>Le drop est là.</h4>
+                <p className="mh" style={{ textTransform: "uppercase", fontWeight: 900 }}>Le drop est là.</p>
                 <div className="r" style={{ background: "#E6E6DF" }} /><div className="p" /><div className="q" style={{ background: "#0D0D0D", borderRadius: 0 }} />
               </div>
               <div className="cap">{t.x2}</div>
@@ -389,7 +610,7 @@ export default function BlackFridayClient() {
             <div className="mc" style={{ background: "#FCE4E0" }}>
               <div className="scr">
                 <div className="b" style={{ background: "#C2475F", color: "#fff" }}>-25 % + soin offert</div>
-                <h4 style={{ fontFamily: "Georgia,serif", fontWeight: 400 }}>Votre routine, plus douce.</h4>
+                <p className="mh" style={{ fontFamily: "Georgia,serif", fontWeight: 400 }}>Votre routine, plus douce.</p>
                 <div className="r" style={{ background: "#FCE4E0", borderRadius: "40px 40px 10px 10px" }} /><div className="p" /><div className="q" style={{ background: "#C2475F" }} />
               </div>
               <div className="cap">{t.x3}</div>
@@ -406,11 +627,13 @@ export default function BlackFridayClient() {
               <h2 dangerouslySetInnerHTML={html(t.o_h)} />
               <div className="price"><span>{CONFIG.price} {CONFIG.currency}</span><small>{t.o_u}</small></div>
               <p className="sm">{t.o_p}</p>
+              <p className="sm">{t.paya(CONFIG.payment)}</p>
             </div>
             <div>
               <ul>{t.inclist.map((x: string) => <li key={x}>{x}</li>)}</ul>
               <a className="btn" href="#contact">{t.o_cta}</a>
               <p className="sm">{t.o_s}</p>
+              {typeof CONFIG.slotsLeft === "number" && <p className="sm">{t.slots(CONFIG.slotsLeft)}</p>}
             </div>
           </div>
         </div>
@@ -418,7 +641,7 @@ export default function BlackFridayClient() {
 
       <section className="sec">
         <div className="w about">
-          <div className="av"><Image src={CONFIG.photo} alt="Ayoub Wahid" width={440} height={440} /></div>
+          <div className="av"><Image src={CONFIG.photo} alt={lang === "fr" ? "Portrait d’Ayoub Wahid, développeur à Casablanca" : "Portrait of Ayoub Wahid, developer in Casablanca"} width={440} height={440} sizes="(max-width: 860px) 150px, 220px" loading="lazy" /></div>
           <div>
             <p className="eyebrow">{t.a_e}</p>
             <h2 style={{ margin: "12px 0 22px" }} dangerouslySetInnerHTML={html(t.a_h)} />
@@ -435,7 +658,7 @@ export default function BlackFridayClient() {
             <h2 dangerouslySetInnerHTML={html(t.q_h)} />
           </header>
           <div className="faq">
-            {t.faq.map((f: string[]) => (
+            {[...t.faq, [t.payq, t.paya(CONFIG.payment)]].map((f: string[]) => (
               <details key={f[0]}><summary>{f[0]}</summary><p>{f[1]}</p></details>
             ))}
           </div>
@@ -456,16 +679,34 @@ export default function BlackFridayClient() {
                 noValidate
                 onSubmit={(e) => {
                   e.preventDefault();
-                  submit({ name, shop, date, contact, lang }, "main");
+                  submit({ name, shop, date, contact, lang, ...utm }, "main");
                 }}
               >
-                <div className="f"><label htmlFor="f-name">{t.f1}</label><input id="f-name" autoComplete="given-name" value={name} onChange={(e) => setName(e.target.value)} /></div>
-                <div className="f"><label htmlFor="f-shop">{t.f2}</label><input id="f-shop" inputMode="url" autoComplete="off" placeholder={t.f2p} value={shop} onChange={(e) => setShop(e.target.value)} /></div>
-                <div className="f"><label htmlFor="f-date">{t.f3}</label><input id="f-date" autoComplete="off" placeholder={t.f3p} value={date} onChange={(e) => setDate(e.target.value)} /><small>{t.f3s}</small></div>
-                <div className="f"><label htmlFor="f-contact">{t.f4}</label><input id="f-contact" autoComplete="off" placeholder={t.f4p} value={contact} onChange={(e) => setContact(e.target.value)} /></div>
-                <p className="err" role="alert">{err}</p>
-                <button className="btn" type="submit">{t.f5}</button>
+                <div className="f field">
+                  <label htmlFor="f-shop">{t.f2}</label>
+                  <input ref={mShopRef} id="f-shop" type="text" inputMode="url" autoCapitalize="none" autoCorrect="off" spellCheck={false} enterKeyHint="next" autoComplete="url" placeholder={t.f2p} value={shop} aria-invalid={mErr === "shop" || undefined} aria-describedby={mErr === "shop" ? "m-shop-err" : undefined} onChange={(e) => setShop(e.target.value)} onFocus={(e) => revealField(e.currentTarget)} />
+                  {mErr === "shop" && <p id="m-shop-err" className="err" role="alert">{t.e1}</p>}
+                </div>
+                <div className="f field">
+                  <label htmlFor="f-contact">{t.f4}</label>
+                  <input ref={mContactRef} id="f-contact" type="text" inputMode={mode} autoCapitalize="none" autoCorrect="off" spellCheck={false} enterKeyHint="send" autoComplete={contactComplete} placeholder={contactPlaceholder} value={contact} aria-invalid={mErr === "contact" || undefined} aria-describedby={mErr === "contact" ? "m-contact-err" : undefined} onChange={(e) => setContact(e.target.value)} onFocus={(e) => revealField(e.currentTarget)} />
+                  <div className="quick" role="group" aria-label={t.f4}>
+                    <button type="button" aria-pressed={hint === "wa"} onClick={() => setHint("wa")}>{t.qwa}</button>
+                    <button type="button" aria-pressed={hint === "mail"} onClick={() => setHint("mail")}>{t.qmail}</button>
+                    <button type="button" aria-pressed={hint === "ig"} onClick={() => setHint("ig")}>{t.qig}</button>
+                  </div>
+                  {mErr === "contact" && <p id="m-contact-err" className="err" role="alert">{t.e2}</p>}
+                </div>
+                <button className="more" type="button" aria-expanded={details} onClick={() => setDetails((open) => !open)}>{details ? t.less : t.more}</button>
+                {details && (
+                  <>
+                    <div className="f"><label htmlFor="f-name">{t.f1}</label><input id="f-name" autoComplete="given-name" enterKeyHint="next" value={name} onChange={(e) => setName(e.target.value)} onFocus={(e) => revealField(e.currentTarget)} /></div>
+                    <div className="f"><label htmlFor="f-date">{t.f3}</label><input id="f-date" autoComplete="off" enterKeyHint="next" placeholder={t.f3p} value={date} onChange={(e) => setDate(e.target.value)} onFocus={(e) => revealField(e.currentTarget)} /><small>{t.f3s}</small></div>
+                  </>
+                )}
+                <button className="btn" type="submit" disabled={busy}>{busy ? t.sending : t.f5}</button>
                 <p className="consent">{t.consent}</p>
+                <p className="consent">{t.ctrl}</p>
               </form>
             )}
             {result && (
@@ -494,6 +735,7 @@ export default function BlackFridayClient() {
           <span>{t.foot2}</span>
         </div>
       </footer>
+      </main>
 
       <div className={`stick${stuck ? " on" : ""}`}>
         <span dangerouslySetInnerHTML={html(t.stk)} />

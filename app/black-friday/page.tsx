@@ -19,7 +19,16 @@ export const metadata: Metadata = {
   title: "Page Black Friday en 3 jours · Ayoub Wahid",
   description:
     "Votre page Black Friday prête en 3 jours. Aperçu visuel gratuit avant tout paiement. Pour boutiques en ligne.",
+  alternates: { canonical: "/black-friday" },
   openGraph: {
+    title: "Votre page Black Friday, prête en 3 jours",
+    description: "Aperçu gratuit sous 24 h, sans engagement.",
+    url: "/black-friday",
+    images: ["/ayoub-wahid.jpg"],
+    locale: "fr_FR",
+  },
+  twitter: {
+    card: "summary_large_image",
     title: "Votre page Black Friday, prête en 3 jours",
     description: "Aperçu gratuit sous 24 h, sans engagement.",
     images: ["/ayoub-wahid.jpg"],
