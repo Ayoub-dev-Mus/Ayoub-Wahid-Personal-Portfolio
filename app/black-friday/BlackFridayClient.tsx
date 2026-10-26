@@ -30,7 +30,7 @@ const CONFIG = {
     { name: "Space Goods" },
   ] as { name: string; img?: string; url?: string; note?: string }[],
   testimonials: [] as { quote: string; name: string; role: string }[],
-  endpoint: "", // vide : l’URL vient de NEXT_PUBLIC_FORM_ENDPOINT
+  endpoint: "/black-friday/send", // Telegram. NEXT_PUBLIC_FORM_ENDPOINT peut remplacer cette adresse.
   photo: "/ayoub-wahid.jpg",
   cutoff: new Date(2026, 10, 13, 23, 59, 59).getTime(), // fin des commandes
 };
