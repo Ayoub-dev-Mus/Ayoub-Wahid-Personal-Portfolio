@@ -182,6 +182,8 @@
 .bfp footer a { color: var(--ink); font-weight: 700; }
 .bfp footer .w span.reach { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; max-width: none; }
 .bfp footer .copy { min-height: 44px; min-width: 44px; padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); font: 700 16px var(--body); cursor: pointer; touch-action: manipulation; }
+.bfp footer .w span.legal { display: flex; flex-wrap: wrap; gap: 8px 16px; max-width: none; }
+.bfp .wafloat { display: none; }
 .bfp .stick { transform: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; background: var(--navy); color: #fff; display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));}
 .bfp .stick span { font: 700 14px var(--body); line-height: 1.25;}
 .bfp .stick b { color: var(--yellow);}
@@ -207,10 +209,14 @@
 .bfp .chip.a { left: 0;}
 .bfp .chip.b { right: 0;}
 .bfp .nr .btn { display: none;}
+.bfp .wafloat { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(78px + env(safe-area-inset-bottom, 0px)); z-index: 65; width: 56px; height: 56px; border-radius: 50%; background: #25D366; color: #fff; display: grid; place-items: center; text-decoration: none; box-shadow: 0 8px 18px rgba(14, 26, 43, .22); touch-action: manipulation;}
+.bfp .wafloat.off { display: none;}
+.bfp .wafloat:active { transform: translateY(2px);}
 }
 @media (prefers-reduced-motion: reduce) {
 .bfp .phone { animation: none;}
-.bfp .btn, .bfp .work .shot img { transition: none;}
+.bfp .btn, .bfp .work .shot img, .bfp .wafloat { transition: none;}
+.bfp .wafloat:active { transform: none;}
 }
 .bfp .who { display: flex; align-items: center; gap: 14px; margin-top: 22px; }
 .bfp .who img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid var(--ink); background: var(--yellow); flex: none; }

@@ -30,7 +30,7 @@ const CONFIG = {
     { name: "Space Goods" },
   ] as { name: string; img?: string; url?: string; note?: string }[],
   testimonials: [] as { quote: string; name: string; role: string }[],
-  endpoint: "/black-friday/send", // POST JSON. Vide = message à copier.
+  endpoint: "", // vide : l’URL vient de NEXT_PUBLIC_FORM_ENDPOINT
   photo: "/ayoub-wahid.jpg",
   cutoff: new Date(2026, 10, 13, 23, 59, 59).getTime(), // fin des commandes
 };
@@ -45,17 +45,18 @@ type Lead = {
   utm_source: string;
   utm_medium: string;
   utm_campaign: string;
+  fbclid: string;
 };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const L: Record<Lang, any> = {
   fr: {
-    bar: "Commandes Black Friday ouvertes jusqu’au 13 novembre :",
+    bar: "Commandes Black Friday ouvertes jusqu’au 13 novembre",
     navcta: "Mon aperçu gratuit", eyebrow: "Pages d’atterrissage · Boutiques en ligne",
     h1: "Votre page Black Friday, <em>prête en 3 jours.</em>",
     lede: "Une seule page, une seule offre, un bouton d’achat impossible à rater. Je vous montre l’aperçu avant que vous ne payiez quoi que ce soit.",
     cta: "Voir mon aperçu gratuit", ctanote: "Réponse sous 24 h, sans engagement. J’accepte 6 pages maximum avant le 13 novembre.",
-    t1: "Livrée en 3 jours", t2: "Pensée pour le téléphone", t3: "Un tour de modifications inclus", t4: "Rien à préparer : un lien suffit",
+    t1: "Livrée en 3 jours", t2: "Pensée pour le téléphone", t3: "Un tour de modifications inclus", t4: "Un lien suffit pour démarrer, je m’occupe du reste",
     chipa: "Aperçu gratuit", chipb: "Prête en 3 jours", chipc: "Compte à rebours réel",
     ph1: "Offrez des bijoux <em>qui durent.</em>", ph2: "Notre collection d’hiver est à -25 % jusqu’au 29 novembre.", ph3: "Découvrir l’offre",
     pr_e: "Mon travail", pr_h: "Des boutiques en ligne, <em>des pages qui vendent.</em>", pr_l: "Projets sur lesquels j’ai travaillé : boutiques de bijoux, de mode et de marques en ligne.", pr_p: "Voir mes réalisations →", pr_note: "Shopify · e-commerce", wa: "Plutôt WhatsApp ?",
@@ -70,7 +71,7 @@ const L: Record<Lang, any> = {
     s_e: "Comment ça marche", s_h: "Votre page en <em>3 jours.</em>",
     steps: [["Jour 1", "1", "Brief et maquette", "Vous m’envoyez le lien de votre boutique, votre offre et vos textes. Je prépare la maquette."], ["Jour 2", "2", "Construction", "Je construis la page et je la teste sur téléphone et ordinateur."], ["Jour 3", "3", "Retours et mise en ligne", "Vous relisez, je corrige, et on met la page en ligne ensemble."]],
     x_e: "Des styles pour chaque boutique", x_h: "La page prend <em>l’allure de votre marque.</em>", x_l: "Mêmes principes, ambiance différente. Voici trois exemples de pages pour des boutiques fictives.",
-    x1: "Bijoux, élégant", x2: "Mode, streetwear", x3: "Beauté, doux",
+    x1: "Bijoux, élégant", x2: "Mode, streetwear", x3: "Beauté, doux", xh1: "Un cadeau qui se garde.",
     o_e: "L’offre", o_h: "Une page Black Friday, <em>clé en main.</em>", o_u: "la page", o_p: "Acompte de 50 % pour démarrer, le solde à la livraison.",
     inclist: ["Aperçu visuel gratuit sous 24 h, avant tout paiement", "Page livrée en 3 jours", "Adaptée au téléphone et à l’ordinateur", "Compte à rebours et bandeau d’offre", "Un tour de modifications", "Mise en ligne avec vous"],
     o_cta: "Je veux mon aperçu →", o_s: "Dernière commande : 13 novembre, pour une mise en ligne avant le 27.",
@@ -89,20 +90,20 @@ const L: Record<Lang, any> = {
     pwa: "+212 6 00 00 00 00", pmail: "vous@email.com", pig: "@votrecompte",
     waMsg: "Bonjour Ayoub, je veux un aperçu gratuit de page Black Friday.",
     e1: "Ajoutez le lien de votre boutique ou de votre compte.", e2: "Ajoutez un WhatsApp, un e-mail ou un Instagram.",
-    r1: "Presque terminé !", r2: "Envoyez ce message pour que je reçoive votre demande.", r3: "Copier le message", copied: "Message copié ✓", copyfail: "Sélectionnez le texte ci-dessus et copiez-le.", sent: "Demande envoyée ✓ Je vous réponds sous 24 h.",
-    msgtpl: (d: Lead) => { return "Bonjour Ayoub, je souhaite recevoir un aperçu gratuit de page Black Friday.\nPrénom : " + d.name + "\nBoutique : " + d.shop + (d.date ? "\nDate de la promo : " + d.date : "") + "\nContact : " + d.contact + "\nLangue : " + d.lang + (d.utm_source ? "\nSource : " + d.utm_source : "") + (d.utm_medium ? "\nSupport : " + d.utm_medium : "") + (d.utm_campaign ? "\nCampagne : " + d.utm_campaign : "") + "\nOffre : " + CONFIG.price + " " + CONFIG.currency; },
+    r1: "Presque terminé !", r2: "Envoyez ce message pour que je reçoive votre demande.", r3: "Copier le message", copied: "Message copié ✓", copyfail: "Sélectionnez le texte ci-dessus et copiez-le.", sent: "Merci, je te réponds sous 24 h sur WhatsApp ou par e-mail.", legal: "Mentions légales", privacy: "Confidentialité",
+    msgtpl: (d: Lead) => { return "Bonjour Ayoub, je souhaite recevoir un aperçu gratuit de page Black Friday.\nPrénom : " + d.name + "\nBoutique : " + d.shop + (d.date ? "\nDate de la promo : " + d.date : "") + "\nContact : " + d.contact + "\nLangue : " + d.lang + (d.utm_source ? "\nSource : " + d.utm_source : "") + (d.utm_medium ? "\nSupport : " + d.utm_medium : "") + (d.utm_campaign ? "\nCampagne : " + d.utm_campaign : "") + (d.fbclid ? "\nfbclid : " + d.fbclid : "") + "\nOffre : " + CONFIG.price + " " + CONFIG.currency; },
     lIg: "Ouvrir Instagram", lWa: "Envoyer sur WhatsApp", lMail: "Écrire par email", mailSub: "Aperçu Black Friday", copyBtn: "Copier", copyMailOk: "E-mail copié", copyMailFail: "Copie impossible",
     foot1: "Pages d’atterrissage pour boutiques en ligne", foot2: "Les pages des exemples sont celles de boutiques fictives.",
     stk: "Commandes jusqu’au <b>13 nov.</b>", stkc: "Mon aperçu", cdl: "j", cdd: "jours restants",
     cdj: "j", cdh: "h", cdm: "min", cds: "s"
   },
   en: {
-    bar: "Black Friday orders are open until November 13:",
+    bar: "Black Friday orders are open until November 13",
     navcta: "My free preview", eyebrow: "Landing pages · Online shops",
     h1: "Your Black Friday page, <em>ready in 3 days.</em>",
     lede: "One page, one offer, one buy button you can’t miss. I show you the preview before you pay anything.",
     cta: "See my free preview", ctanote: "Reply within 24 hours, no commitment. I take 6 pages maximum before November 13.",
-    t1: "Delivered in 3 days", t2: "Built for phones", t3: "One revision round included", t4: "Nothing to prepare: one link is enough",
+    t1: "Delivered in 3 days", t2: "Built for phones", t3: "One revision round included", t4: "A link is enough to start. I handle the rest.",
     chipa: "Free preview", chipb: "Ready in 3 days", chipc: "Real countdown",
     ph1: "Gifts of jewelry <em>that last.</em>", ph2: "Our winter collection is 25% off until November 29.", ph3: "See the offer",
     pr_e: "My work", pr_h: "Online shops, <em>pages that sell.</em>", pr_l: "Projects I have worked on: jewelry, fashion and online brands.", pr_p: "See my work →", pr_note: "Shopify · e-commerce", wa: "Prefer WhatsApp?",
@@ -117,7 +118,7 @@ const L: Record<Lang, any> = {
     s_e: "How it works", s_h: "Your page in <em>3 days.</em>",
     steps: [["Day 1", "1", "Brief and mockup", "You send your shop link, your offer and your texts. I prepare the mockup."], ["Day 2", "2", "Build", "I build the page and test it on phone and desktop."], ["Day 3", "3", "Feedback and launch", "You review, I fix, and we put the page live together."]],
     x_e: "A style for every shop", x_h: "The page takes on <em>your brand’s look.</em>", x_l: "Same principles, different mood. Here are three sample pages for fictional shops.",
-    x1: "Jewelry, elegant", x2: "Fashion, streetwear", x3: "Beauty, soft",
+    x1: "Jewelry, elegant", x2: "Fashion, streetwear", x3: "Beauty, soft", xh1: "A gift made to last.",
     o_e: "The offer", o_h: "A Black Friday page, <em>ready to use.</em>", o_u: "per page", o_p: "50% deposit to start, the rest on delivery.",
     inclist: ["Free visual preview within 24 hours, before any payment", "Page delivered in 3 days", "Works on phone and desktop", "Countdown and offer banner", "One round of changes", "Launched together with you"],
     o_cta: "I want my preview →", o_s: "Last order: November 13, to be live before the 27th.",
@@ -136,8 +137,8 @@ const L: Record<Lang, any> = {
     pwa: "+212 6 00 00 00 00", pmail: "you@email.com", pig: "@youraccount",
     waMsg: "Hello Ayoub, I would like a free Black Friday page preview.",
     e1: "Add the link to your shop or account.", e2: "Add a WhatsApp, an email or an Instagram.",
-    r1: "Almost done!", r2: "Send this message so I receive your request.", r3: "Copy the message", copied: "Message copied ✓", copyfail: "Select the text above and copy it.", sent: "Request sent ✓ I’ll reply within 24 hours.",
-    msgtpl: (d: Lead) => { return "Hello Ayoub, I’d like a free Black Friday page preview.\nFirst name: " + d.name + "\nShop: " + d.shop + (d.date ? "\nPromo date: " + d.date : "") + "\nContact: " + d.contact + "\nLanguage: " + d.lang + (d.utm_source ? "\nSource: " + d.utm_source : "") + (d.utm_medium ? "\nMedium: " + d.utm_medium : "") + (d.utm_campaign ? "\nCampaign: " + d.utm_campaign : "") + "\nOffer: " + CONFIG.price + " " + CONFIG.currency; },
+    r1: "Almost done!", r2: "Send this message so I receive your request.", r3: "Copy the message", copied: "Message copied ✓", copyfail: "Select the text above and copy it.", sent: "Thanks, I’ll reply within 24 hours on WhatsApp or by email.", legal: "Legal notice", privacy: "Privacy",
+    msgtpl: (d: Lead) => { return "Hello Ayoub, I’d like a free Black Friday page preview.\nFirst name: " + d.name + "\nShop: " + d.shop + (d.date ? "\nPromo date: " + d.date : "") + "\nContact: " + d.contact + "\nLanguage: " + d.lang + (d.utm_source ? "\nSource: " + d.utm_source : "") + (d.utm_medium ? "\nMedium: " + d.utm_medium : "") + (d.utm_campaign ? "\nCampaign: " + d.utm_campaign : "") + (d.fbclid ? "\nfbclid: " + d.fbclid : "") + "\nOffer: " + CONFIG.price + " " + CONFIG.currency; },
     lIg: "Open Instagram", lWa: "Send on WhatsApp", lMail: "Write by email", mailSub: "Black Friday preview", copyBtn: "Copy", copyMailOk: "Email copied", copyMailFail: "Couldn’t copy",
     foot1: "Landing pages for online shops", foot2: "The sample pages show fictional shops.",
     stk: "Orders until <b>Nov 13</b>", stkc: "My preview", cdl: "d", cdd: "days left",
@@ -147,6 +148,14 @@ const L: Record<Lang, any> = {
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
+}
+
+function formatWhatsapp(raw: string) {
+  const digits = raw.replace(/\D/g, "");
+  if (digits.startsWith("212") && digits.length === 12) {
+    return `+212 ${digits.slice(3, 6)} ${digits.slice(6, 9)} ${digits.slice(9)}`;
+  }
+  return `+${digits}`;
 }
 
 type Hint = "" | "wa" | "mail" | "ig";
@@ -173,7 +182,8 @@ export default function BlackFridayClient() {
   const [lang, setLang] = useState<Lang>("fr");
   const t = L[lang];
   const [stuck, setStuck] = useState(false);
-  const [utm, setUtm] = useState({ utm_source: "", utm_medium: "", utm_campaign: "" });
+  const [utm, setUtm] = useState({ utm_source: "", utm_medium: "", utm_campaign: "", fbclid: "" });
+  const [quiet, setQuiet] = useState(false);
 
   const [name, setName] = useState("");
   const [shop, setShop] = useState("");
@@ -207,6 +217,7 @@ export default function BlackFridayClient() {
       utm_source: (q.get("utm_source") || "").slice(0, 120),
       utm_medium: (q.get("utm_medium") || "").slice(0, 120),
       utm_campaign: (q.get("utm_campaign") || "").slice(0, 120),
+      fbclid: (q.get("fbclid") || "").slice(0, 120),
     });
   }, []);
 
@@ -223,7 +234,7 @@ export default function BlackFridayClient() {
       const s = total % 60;
       const closed = lang === "fr" ? "Commandes fermées" : "Orders closed";
       const unit = lang === "fr" ? "j" : "d";
-      write(barRef.current, ms === 0 ? closed : `${d} ${unit} ${pad(h)}:${pad(m)}:${pad(s)}`);
+      write(barRef.current, ms === 0 ? ` : ${closed}` : ` : ${d} ${unit} ${pad(h)}:${pad(m)}:${pad(s)}`);
       write(dRef.current, ms === 0 ? "0" : String(d));
       write(hRef.current, pad(h));
       write(mRef.current, pad(m));
@@ -264,8 +275,10 @@ export default function BlackFridayClient() {
     const keys = { current: false };
     let frame = 0;
     const sync = () => {
-      const show = window.scrollY > 480 && !seen.current && !keys.current;
+      const show = window.scrollY > 520 && !seen.current && !keys.current;
       setStuck((prev) => (prev === show ? prev : show));
+      const hide = seen.current || keys.current;
+      setQuiet((prev) => (prev === hide ? prev : hide));
     };
     const onScroll = () => {
       if (frame) return;
@@ -319,12 +332,18 @@ export default function BlackFridayClient() {
     setBusy(true);
     const msg: string = t.msgtpl(data);
     let sent = false;
-    if (CONFIG.endpoint) {
+    const endpoint = process.env.NEXT_PUBLIC_FORM_ENDPOINT || CONFIG.endpoint;
+    if (endpoint) {
+      const payload: Record<string, string> = { ...data };
+      if (endpoint.includes("web3forms.com")) {
+        const key = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "";
+        if (key) payload.access_key = key;
+      }
       try {
-        const r = await fetch(CONFIG.endpoint, {
+        const r = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify(data),
+          body: JSON.stringify(payload),
         });
         sent = r.ok;
       } catch {
@@ -606,7 +625,7 @@ export default function BlackFridayClient() {
             <div className="mc" style={{ background: "#F6EBD3" }}>
               <div className="scr">
                 <div className="b" style={{ background: "#2A2118", color: "#F6E7C4" }}>Black Friday · -25 %</div>
-                <p className="mh" style={{ fontFamily: "Georgia,serif", fontWeight: 600 }}>Offrez des bijoux qui durent.</p>
+                <p className="mh" style={{ fontFamily: "Georgia,serif", fontWeight: 600 }}>{t.xh1}</p>
                 <div className="r" style={{ background: "#F2E9DB" }} /><div className="p" /><div className="q" style={{ background: "#B8893B" }} />
               </div>
               <div className="cap">{t.x1}</div>
@@ -747,7 +766,8 @@ export default function BlackFridayClient() {
           <span>© 2026 Ayoub Wahid · {t.foot1}</span>
           <span>{t.foot2}</span>
           {igHref && <span><a href={igHref} target="_blank" rel="noopener noreferrer">@{CONFIG.instagram}</a></span>}
-          {waHref && <span><a href={waHref} target="_blank" rel="noopener noreferrer">+{CONFIG.whatsapp}</a></span>}
+          {waHref && <span><a href={waHref} target="_blank" rel="noopener noreferrer">{formatWhatsapp(CONFIG.whatsapp)}</a></span>}
+          <span className="legal"><a href="/mentions-legales">{t.legal}</a><a href="/confidentialite">{t.privacy}</a></span>
           {CONFIG.email && (
             <span className="reach">
               <a href={mailHref} target="_blank" rel="noopener noreferrer">{CONFIG.email}</a>
@@ -759,6 +779,11 @@ export default function BlackFridayClient() {
       </footer>
       </main>
 
+      {waHref && (
+        <a className={`wafloat${quiet ? " off" : ""}`} href={waHref} target="_blank" rel="noopener noreferrer" aria-label={t.wa}>
+          <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.91-7.02Zm-7 15.16h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.23 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28Z" /></svg>
+        </a>
+      )}
       <div className={`stick${stuck ? " on" : ""}`}>
         <span dangerouslySetInnerHTML={html(t.stk)} />
         <a className="btn sm" href="#contact">{t.stkc}</a>
