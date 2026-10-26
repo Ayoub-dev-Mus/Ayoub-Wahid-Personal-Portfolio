@@ -41,6 +41,7 @@ export function BottomNav() {
             );
           })}
         </ul>
+        <a href="/black-friday" className="order-3 basis-full py-1 text-center font-mono text-[10px] uppercase tracking-widest underline underline-offset-4 sm:order-none sm:basis-auto sm:px-2">Black Friday</a>
         <a href="#contact" className="ml-auto inline-flex min-h-11 shrink-0 items-center rounded-full bg-accent px-4 text-xs font-semibold text-onaccent transition-transform hover:scale-105 sm:ml-0 sm:text-sm">
           {site.cta}
         </a>
