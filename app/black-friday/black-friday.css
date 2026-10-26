@@ -179,6 +179,9 @@
 .bfp .err { color: #B71F27; font: 600 14px var(--body); min-height: 1em;}
 .bfp footer .w { padding-block: 34px calc(120px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-size: 16px; color: var(--ink-2);}
 .bfp footer .w span { display: block; max-width: 62ch; }
+.bfp footer a { color: var(--ink); font-weight: 700; }
+.bfp footer .w span.reach { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; max-width: none; }
+.bfp footer .copy { min-height: 44px; min-width: 44px; padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); font: 700 16px var(--body); cursor: pointer; touch-action: manipulation; }
 .bfp .stick { transform: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; background: var(--navy); color: #fff; display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));}
 .bfp .stick span { font: 700 14px var(--body); line-height: 1.25;}
 .bfp .stick b { color: var(--yellow);}

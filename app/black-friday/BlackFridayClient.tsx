@@ -17,8 +17,8 @@ const CONFIG = {
   currency: "€", // € ou $
   payment: "virement ou lien de paiement",
   slotsLeft: null as number | null,
-  instagram: "", // ex: "ayoub.pages" (sans @)
-  whatsapp: "", // ex: "212600000000" (indicatif + numéro, sans +)
+  instagram: "ayoub___wahid", // sans @, pour https://ig.me/m/ayoub___wahid
+  whatsapp: "212663112489", // indicatif + numéro, sans +, pour https://wa.me/212663112489
   email: "contact@wahidayoub.com",
   portfolio: "https://ayoub-wahid-personal-portfolio.vercel.app",
   work: [
@@ -91,7 +91,7 @@ const L: Record<Lang, any> = {
     e1: "Ajoutez le lien de votre boutique ou de votre compte.", e2: "Ajoutez un WhatsApp, un e-mail ou un Instagram.",
     r1: "Presque terminé !", r2: "Envoyez ce message pour que je reçoive votre demande.", r3: "Copier le message", copied: "Message copié ✓", copyfail: "Sélectionnez le texte ci-dessus et copiez-le.", sent: "Demande envoyée ✓ Je vous réponds sous 24 h.",
     msgtpl: (d: Lead) => { return "Bonjour Ayoub, je souhaite recevoir un aperçu gratuit de page Black Friday.\nPrénom : " + d.name + "\nBoutique : " + d.shop + (d.date ? "\nDate de la promo : " + d.date : "") + "\nContact : " + d.contact + "\nLangue : " + d.lang + (d.utm_source ? "\nSource : " + d.utm_source : "") + (d.utm_medium ? "\nSupport : " + d.utm_medium : "") + (d.utm_campaign ? "\nCampagne : " + d.utm_campaign : "") + "\nOffre : " + CONFIG.price + " " + CONFIG.currency; },
-    lIg: "Ouvrir Instagram", lWa: "Envoyer sur WhatsApp", lMail: "Écrire par email",
+    lIg: "Ouvrir Instagram", lWa: "Envoyer sur WhatsApp", lMail: "Écrire par email", mailSub: "Aperçu Black Friday", copyBtn: "Copier", copyMailOk: "E-mail copié", copyMailFail: "Copie impossible",
     foot1: "Pages d’atterrissage pour boutiques en ligne", foot2: "Les pages des exemples sont celles de boutiques fictives.",
     stk: "Commandes jusqu’au <b>13 nov.</b>", stkc: "Mon aperçu", cdl: "j", cdd: "jours restants",
     cdj: "j", cdh: "h", cdm: "min", cds: "s"
@@ -138,7 +138,7 @@ const L: Record<Lang, any> = {
     e1: "Add the link to your shop or account.", e2: "Add a WhatsApp, an email or an Instagram.",
     r1: "Almost done!", r2: "Send this message so I receive your request.", r3: "Copy the message", copied: "Message copied ✓", copyfail: "Select the text above and copy it.", sent: "Request sent ✓ I’ll reply within 24 hours.",
     msgtpl: (d: Lead) => { return "Hello Ayoub, I’d like a free Black Friday page preview.\nFirst name: " + d.name + "\nShop: " + d.shop + (d.date ? "\nPromo date: " + d.date : "") + "\nContact: " + d.contact + "\nLanguage: " + d.lang + (d.utm_source ? "\nSource: " + d.utm_source : "") + (d.utm_medium ? "\nMedium: " + d.utm_medium : "") + (d.utm_campaign ? "\nCampaign: " + d.utm_campaign : "") + "\nOffer: " + CONFIG.price + " " + CONFIG.currency; },
-    lIg: "Open Instagram", lWa: "Send on WhatsApp", lMail: "Write by email",
+    lIg: "Open Instagram", lWa: "Send on WhatsApp", lMail: "Write by email", mailSub: "Black Friday preview", copyBtn: "Copy", copyMailOk: "Email copied", copyMailFail: "Couldn’t copy",
     foot1: "Landing pages for online shops", foot2: "The sample pages show fictional shops.",
     stk: "Orders until <b>Nov 13</b>", stkc: "My preview", cdl: "d", cdd: "days left",
     cdj: "d", cdh: "h", cdm: "min", cds: "s"
@@ -186,6 +186,7 @@ export default function BlackFridayClient() {
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<{ msg: string; sent: boolean } | null>(null);
   const [copied, setCopied] = useState("");
+  const [mailNote, setMailNote] = useState("");
   const resRef = useRef<HTMLDivElement>(null);
   const msgRef = useRef<HTMLPreElement>(null);
   const hShopRef = useRef<HTMLInputElement>(null);
@@ -343,6 +344,17 @@ export default function BlackFridayClient() {
   const contactPlaceholder = !contact.trim() && hint === "wa" ? t.pwa : !contact.trim() && hint === "mail" ? t.pmail : !contact.trim() && hint === "ig" ? t.pig : t.f4p;
   const contactComplete = mode === "email" ? "email" : mode === "tel" ? "tel" : "off";
   const waHref = CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t.waMsg)}` : "";
+  const igHref = CONFIG.instagram ? `https://ig.me/m/${CONFIG.instagram}` : "";
+  const mailHref = CONFIG.email ? `mailto:${CONFIG.email}?subject=${encodeURIComponent(t.mailSub)}&body=${encodeURIComponent(t.waMsg)}` : "";
+
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(CONFIG.email);
+      setMailNote(t.copyMailOk);
+    } catch {
+      setMailNote(t.copyMailFail);
+    }
+  }
 
   async function copy() {
     try {
@@ -647,6 +659,7 @@ export default function BlackFridayClient() {
             <h2 style={{ margin: "12px 0 22px" }} dangerouslySetInnerHTML={html(t.a_h)} />
             <p>{t.a_p1}</p>
             <p>{t.a_p2}</p>
+            {igHref && <p><a href={igHref} target="_blank" rel="noopener noreferrer">@{CONFIG.instagram}</a></p>}
           </div>
         </div>
       </section>
@@ -719,7 +732,7 @@ export default function BlackFridayClient() {
                     <button className="btn sm" type="button" onClick={copy}>{t.r3}</button>
                     {CONFIG.instagram && <a className="btn sm ghost" href={`https://ig.me/m/${CONFIG.instagram}`} target="_blank" rel="noopener noreferrer">{t.lIg}</a>}
                     {CONFIG.whatsapp && <a className="btn sm ghost" href={`https://wa.me/${CONFIG.whatsapp}?text=${enc}`} target="_blank" rel="noopener noreferrer">{t.lWa}</a>}
-                    {CONFIG.email && <a className="btn sm ghost" href={`mailto:${CONFIG.email}?subject=${encodeURIComponent("Aperçu Black Friday")}&body=${enc}`}>{t.lMail}</a>}
+                    {CONFIG.email && <a className="btn sm ghost" href={`mailto:${CONFIG.email}?subject=${encodeURIComponent(t.mailSub)}&body=${enc}`} target="_blank" rel="noopener noreferrer">{t.lMail}</a>}
                   </div>
                 )}
                 {copied && <p className="sm" style={{ fontWeight: 600 }}>{copied}</p>}
@@ -733,6 +746,15 @@ export default function BlackFridayClient() {
         <div className="w">
           <span>© 2026 Ayoub Wahid · {t.foot1}</span>
           <span>{t.foot2}</span>
+          {igHref && <span><a href={igHref} target="_blank" rel="noopener noreferrer">@{CONFIG.instagram}</a></span>}
+          {waHref && <span><a href={waHref} target="_blank" rel="noopener noreferrer">+{CONFIG.whatsapp}</a></span>}
+          {CONFIG.email && (
+            <span className="reach">
+              <a href={mailHref} target="_blank" rel="noopener noreferrer">{CONFIG.email}</a>
+              <button className="copy" type="button" onClick={copyEmail}>{t.copyBtn}</button>
+              {mailNote && <span role="status">{mailNote}</span>}
+            </span>
+          )}
         </div>
       </footer>
       </main>
