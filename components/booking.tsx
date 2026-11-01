@@ -1,9 +1,10 @@
-import { site } from "@/content/site";
-import { ContactForm } from "./contact";
+import { CAL_LINK, site } from "@/content/site";
 import { Reveal, SectionLabel } from "./reveal";
 
 export function Booking() {
   const booking = site.booking;
+  if (!CAL_LINK.trim()) return null;
+  const embedUrl = `https://cal.com/${CAL_LINK.trim()}?embed=true`;
 
   return (
     <section id="book" className="px-4 py-20 md:px-8 md:py-28">
@@ -14,13 +15,15 @@ export function Booking() {
           </p>
         )}
         <Reveal>
-          <SectionLabel n="">{booking.title}</SectionLabel>
+          <SectionLabel n="05">{booking.title}</SectionLabel>
         </Reveal>
-        <div className="mt-8 grid gap-6 lg:grid-cols-[.7fr_1.3fr] lg:gap-12">
-          <p className="max-w-md leading-relaxed opacity-75">
-            {booking.formText}
-          </p>
-          <ContactForm id="booking-contact-form" />
+        <div className="mt-8 overflow-hidden rounded-2xl border border-ink bg-paper">
+          <iframe
+            src={embedUrl}
+            title={booking.title}
+            className="h-[680px] w-full border-0"
+            loading="lazy"
+          />
         </div>
       </div>
     </section>

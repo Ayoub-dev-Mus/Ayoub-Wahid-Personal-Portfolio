@@ -1,5 +1,7 @@
 import { contactLinks } from "@/lib/site";
 
+export const CAL_LINK = "wahidayoub/15min";
+
 // Edit all copy here. Components read from this file only.
 export const site = {
   name: "Ayoub Wahid",
@@ -124,7 +126,7 @@ export const site = {
         title: "Also building: SaaS, Web & Mobile",
         projectType: "SaaS or web app",
         cta: "Discuss your web app",
-        pitch: "Also building: SaaS, Web & Mobile.",
+        pitch: "",
         bullets: [
           "MVPs built for production",
           "Dashboards, marketplaces and CRMs",
@@ -257,13 +259,10 @@ export const site = {
   },
   booking: {
     title: "Book a free 15-min call",
-    formText:
-      "Share your details and a little about your project. I'll get back to you to arrange a time.",
     // TODO: Set current monthly availability and update the month.
     spotsLeft: 0,
     month: "November",
     // TODO: Replace with your live Cal.com event URL when ready.
-    calLink: "wahidayoub/15min",
   },
   contact: {
     title: "Contact",

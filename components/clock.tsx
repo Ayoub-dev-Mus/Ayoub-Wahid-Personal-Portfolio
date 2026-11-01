@@ -1,12 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
-import { site } from "@/content/site";
+
+const formatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Africa/Casablanca",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23",
+});
 
 export function Clock({ className }: { className?: string }) {
-  const [t, setT] = useState("--:--:--");
+  const [t, setT] = useState(() => formatter.format(new Date()));
   useEffect(() => {
-    const f = new Intl.DateTimeFormat("en-GB", { timeZone: site.timezone, hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
-    const tick = () => setT(f.format(new Date()));
+    const tick = () => setT(formatter.format(new Date()));
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);

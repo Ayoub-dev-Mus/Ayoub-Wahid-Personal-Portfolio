@@ -11,7 +11,7 @@ export function FAQ() {
     <section id="faq" className="bg-sand px-4 py-20 md:px-8 md:py-28">
       <div className="mx-auto max-w-4xl">
         <Reveal>
-          <SectionLabel n="">{site.faq.title}</SectionLabel>
+          <SectionLabel n="05">{site.faq.title}</SectionLabel>
         </Reveal>
         <div className="mt-8 border-t border-ink">
           {site.faq.items.map((item, index) => {

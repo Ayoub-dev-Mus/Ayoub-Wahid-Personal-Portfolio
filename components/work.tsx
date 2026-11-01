@@ -17,7 +17,7 @@ export function Work({ projects, embedded = false, labels, cta = site.work.cta }
       <div className={embedded ? "" : "mx-auto max-w-7xl"}>
         {!embedded && (
           <>
-            <Reveal><SectionLabel n="02">{site.work.title}</SectionLabel></Reveal>
+            <Reveal><SectionLabel n="03">{site.work.title}</SectionLabel></Reveal>
             <Reveal>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <h2 className="max-w-3xl font-display text-5xl uppercase leading-[.9] sm:text-6xl md:text-7xl">A closer look at the work.</h2>

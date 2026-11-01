@@ -22,7 +22,7 @@ export function About() {
   return (
     <section id="about" className="bg-sand px-4 py-20 md:px-8 md:py-28">
       <div className="mx-auto max-w-7xl">
-        <Reveal><SectionLabel n="04">{about.title}</SectionLabel></Reveal>
+        <Reveal><SectionLabel n="01">{about.title}</SectionLabel></Reveal>
         <div className="mt-8 grid gap-10 lg:grid-cols-[.8fr_1.2fr] lg:gap-16">
           <Reveal>
             <p className="font-display text-4xl uppercase leading-[.95] sm:text-5xl md:text-6xl">Experienced delivery. Direct communication.</p>
