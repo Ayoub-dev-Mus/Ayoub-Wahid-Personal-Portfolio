@@ -18,10 +18,10 @@ export function Reveal({ children, delay = 0, className, y = 36 }: { children: R
   );
 }
 
-export function SectionLabel({ n, children }: { n: string; children: ReactNode }) {
+export function SectionLabel({ n, children }: { n?: string; children: ReactNode }) {
   return (
     <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em]">
-      <span className="rounded-full bg-accent px-2.5 py-1 text-onaccent">{n}</span>
+      {n && <span className="rounded-full bg-accent px-2.5 py-1 text-onaccent">{n}</span>}
       <span>{children}</span>
       <span className="h-px flex-1 bg-ink" />
     </div>

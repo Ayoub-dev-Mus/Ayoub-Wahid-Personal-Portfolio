@@ -1,6 +1,7 @@
 // Edit projects here. Screenshots live in /public/images.
-// TODO: set role, whatIDid, result, and type ("client" when it was a paid engagement).
 // A card is hidden until its image file exists.
+import { site } from "@/content/site";
+
 export type Project = {
   id: string;
   number: string;
@@ -12,13 +13,12 @@ export type Project = {
   imageAlt: string;
   link?: string;
   placeholder?: boolean;
-  role: string;
   whatIDid: string[];
-  result?: string;
+  result: string;
   type: "client" | "concept";
 };
 
-const open: Pick<Project, "role" | "whatIDid" | "type"> = { role: "", whatIDid: [], type: "concept" };
+const open: Pick<Project, "whatIDid" | "type"> = { whatIDid: [], type: "concept" };
 
 export const projects: Project[] = [
   {
@@ -31,6 +31,7 @@ export const projects: Project[] = [
     image: "/images/project-monica-vinader.jpg",
     imageAlt: "Monica Vinader jewelry store",
     link: "https://www.monicavinader.com/",
+    result: site.projectResults["monica-vinader"],
     ...open,
   },
   {
@@ -43,6 +44,7 @@ export const projects: Project[] = [
     image: "/images/project-miansai.jpg",
     imageAlt: "Miansai jewelry store",
     link: "https://miansai.com/",
+    result: site.projectResults.miansai,
     ...open,
   },
   {
@@ -55,6 +57,7 @@ export const projects: Project[] = [
     image: "/images/project-gorjana.jpg",
     imageAlt: "Gorjana jewelry store",
     link: "https://www.gorjana.com/",
+    result: site.projectResults.gorjana,
     ...open,
   },
   {
@@ -68,6 +71,7 @@ export const projects: Project[] = [
     image: "/images/project-magic-spoon.jpg",
     imageAlt: "Magic Spoon homepage with the high-protein cereal hero",
     link: "https://magicspoon.com/",
+    result: site.projectResults["magic-spoon"],
     ...open,
   },
   {
@@ -81,6 +85,7 @@ export const projects: Project[] = [
     image: "/images/project-spacegoods.jpg",
     imageAlt: "Spacegoods homepage featuring the Sleep+ campaign",
     link: "https://spacegoods.com/en-int",
+    result: site.projectResults.spacegoods,
     ...open,
   },
   {
@@ -94,6 +99,7 @@ export const projects: Project[] = [
     image: "/images/project-flare.jpg",
     imageAlt: "Flare Audio homepage with the Flare Zero product hero",
     link: "https://www.flareaudio.com/",
+    result: site.projectResults["flare-audio"],
     ...open,
   },
   {
@@ -107,6 +113,7 @@ export const projects: Project[] = [
     image: "/images/project-away.jpg",
     imageAlt: "Away homepage showing the Aluminum Edge luggage collection",
     link: "https://www.awaytravel.com/",
+    result: site.projectResults.away,
     ...open,
   },
   {
@@ -120,6 +127,7 @@ export const projects: Project[] = [
     image: "/images/project-ribbo.jpg",
     imageAlt: "Ribbo homepage with the customer-service agent headline",
     link: "https://ribbo.ai/",
+    result: site.projectResults.ribbo,
     ...open,
   },
   {
@@ -133,6 +141,7 @@ export const projects: Project[] = [
     image: "/images/project-legalcentre.jpg",
     imageAlt: "LegalCentre homepage for creating and closing a French company",
     link: "https://www.legalcentre.fr/",
+    result: site.projectResults.legalcentre,
     ...open,
   },
 ];

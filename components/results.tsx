@@ -25,12 +25,12 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 
 export function Results() {
   return (
-    <section aria-label={site.results.title} className="my-8 border-y border-onaccent bg-accent text-onaccent">
-      <dl className="grid grid-cols-2 md:grid-cols-4">
+    <section aria-label={site.results.title} className="px-4 pb-8 md:px-8 md:pb-12">
+      <dl className="mx-auto grid max-w-7xl grid-cols-2 overflow-hidden rounded-2xl border border-ink bg-sand md:grid-cols-4">
         {site.results.items.map((r, i) => (
-          <div key={r.label} className={`border-onaccent p-5 py-10 md:p-10 ${i % 2 === 0 ? "border-r" : ""} ${i < 2 ? "border-b md:border-b-0" : ""} md:border-r md:last:border-r-0`}>
-            <dd className="font-display text-[5.5rem] leading-[0.85] md:text-[8rem]"><Counter value={r.value} suffix={r.suffix} /></dd>
-            <dt className="mt-3 font-mono text-[11px] uppercase tracking-widest md:text-xs">{r.label}</dt>
+          <div key={r.label} className={`p-5 py-7 sm:p-7 ${i % 2 === 0 ? "border-r border-ink/20" : ""} ${i < 2 ? "border-b border-ink/20 md:border-b-0" : ""} md:border-r md:border-ink/20 md:last:border-r-0`}>
+            <dd className="font-display text-5xl leading-none sm:text-6xl"><Counter value={r.value} suffix={r.suffix} /></dd>
+            <dt className="mt-2 max-w-[12rem] text-xs leading-relaxed opacity-75 sm:text-sm">{r.label}</dt>
           </div>
         ))}
       </dl>

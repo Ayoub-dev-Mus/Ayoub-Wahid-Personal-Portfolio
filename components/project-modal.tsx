@@ -12,7 +12,7 @@ export type ProjectModalLabels = {
   close: string;
   visit: string;
   similar: string;
-  role: string;
+  challenge: string;
   did: string;
   result: string;
   concept: string;
@@ -22,7 +22,7 @@ const englishLabels = (): ProjectModalLabels => ({
   close: site.ui.closeProject,
   visit: site.ui.visitProject,
   similar: site.ui.similarProject,
-  role: site.ui.myRole,
+  challenge: site.ui.challenge,
   did: site.ui.whatIDid,
   result: site.ui.result,
   concept: site.ui.concept,
@@ -90,16 +90,24 @@ export function ProjectModal({ project, onClose, labels }: { project: Project; o
           {project.placeholder && <span className="rounded-full bg-sand px-3 py-1">{site.ui.placeholder}</span>}
         </div>
         <h3 id="project-title" className="mt-4 font-display text-6xl uppercase leading-none md:text-7xl">{project.title}</h3>
-        <p className="mt-3 text-lg font-medium">{project.outcome}</p>
-        <p className="mt-4 leading-relaxed opacity-80">{project.description}</p>
-        {project.role.trim() && <p className="mt-4"><span className="font-mono text-xs uppercase tracking-widest">{copy.role}</span><span className="mt-1 block">{project.role}</span></p>}
-        {project.whatIDid.length > 0 && (
-          <div className="mt-4">
-            <p className="font-mono text-xs uppercase tracking-widest">{copy.did}</p>
-            <ul className="mt-2 list-disc space-y-1 pl-5">{project.whatIDid.map((item) => <li key={item}>{item}</li>)}</ul>
-          </div>
+        {project.description.trim() && (
+          <section className="mt-6">
+            <h4 className="font-mono text-xs uppercase tracking-widest">{copy.challenge}</h4>
+            <p className="mt-2 leading-relaxed opacity-80">{project.description}</p>
+          </section>
         )}
-        {project.result?.trim() && <p className="mt-4"><span className="font-mono text-xs uppercase tracking-widest">{copy.result}</span><span className="mt-1 block">{project.result}</span></p>}
+        {project.whatIDid.length > 0 && (
+          <section className="mt-5">
+            <h4 className="font-mono text-xs uppercase tracking-widest">{copy.did}</h4>
+            <ul className="mt-2 list-disc space-y-1 pl-5">{project.whatIDid.map((item) => <li key={item}>{item}</li>)}</ul>
+          </section>
+        )}
+        {project.result.trim() && (
+          <section className="mt-5">
+            <h4 className="font-mono text-xs uppercase tracking-widest">{copy.result}</h4>
+            <p className="mt-2 leading-relaxed">{project.result}</p>
+          </section>
+        )}
         <div className="mt-8 flex flex-wrap gap-3">
           {project.link && (
             <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center rounded-full bg-accent px-6 py-3 font-semibold text-onaccent">{copy.visit}</a>

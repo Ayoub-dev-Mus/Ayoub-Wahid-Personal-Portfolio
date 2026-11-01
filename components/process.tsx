@@ -8,7 +8,7 @@ export function Process() {
   const steps = site.process.steps;
   return (
     <section id="process" className="px-4 py-24 md:px-8 md:py-32">
-      <Reveal><SectionLabel n="04">{site.process.title}</SectionLabel></Reveal>
+      <Reveal><SectionLabel n="03">{site.process.title}</SectionLabel></Reveal>
       <ol className="mt-14 grid gap-10 md:grid-cols-4 md:gap-0">
         {steps.map((s, i) => (
           <li key={s.n} className="relative ml-5 border-l border-ink pb-2 pl-10 md:ml-0 md:border-l-0 md:pl-0 md:pr-8">
@@ -34,6 +34,7 @@ export function Process() {
           </li>
         ))}
       </ol>
+      <p className="mt-12 border-t border-ink/20 pt-5 text-xs leading-relaxed opacity-65">{site.stack.line}</p>
     </section>
   );
 }

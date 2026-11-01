@@ -3,12 +3,14 @@ import { contactLinks } from "@/lib/site";
 // Edit all copy here. Components read from this file only.
 export const site = {
   name: "Ayoub Wahid",
+  url: "https://wahidayoub.com",
   monogram: "AW",
-  role: "Freelance Shopify Expert & Full-Stack / AI Developer",
+  role: "Shopify & AI Developer",
   location: "Casablanca, Morocco",
   timezone: "Africa/Casablanca",
   description:
-    "Ayoub Wahid is a Casablanca-based freelance Shopify expert and full-stack and AI developer. Shopify stores, AI agents, SaaS and mobile apps, led with real enterprise project experience.",
+    "I build Shopify stores that sell and AI agents that answer your customers. 100% Job Success on Upwork. Free store review.",
+  metadataTitle: "Ayoub Wahid — Shopify & AI Developer for DTC Brands",
   availability: "Available for new projects",
   clockLabel: "Local time — Casablanca",
   nav: [
@@ -19,7 +21,7 @@ export const site = {
     { id: "process", label: "Process" },
     { id: "contact", label: "Contact" },
   ],
-  cta: "Let's talk",
+  cta: "Book a call",
   ui: {
     lightMode: "Switch to light mode",
     darkMode: "Switch to dark mode",
@@ -29,10 +31,10 @@ export const site = {
     closeProject: "Close project details",
     placeholder: "Placeholder",
     visitProject: "Visit the live store",
-    myRole: "My role",
-    whatIDid: "What I did",
-    result: "Result",
-    concept: "Concept / redesign",
+    challenge: "The challenge",
+    whatIDid: "What I built",
+    result: "The result",
+    concept: "Independent site study",
     similarProject: "Start a project like this",
   },
   links: {
@@ -43,39 +45,41 @@ export const site = {
     calendar: contactLinks.CALENDAR_URL,
   },
   hero: {
-    label: "hello, I'm",
-    first: "AYOUB",
-    last: "WAHID",
+    label: "Ayoub Wahid · Shopify & AI Developer · Casablanca",
+    headline: "Shopify stores that sell. AI agents that answer your customers.",
     subline:
-      "Technical Project Manager at a major telecom operator · Freelance builder for founders worldwide",
-    headline: [
-      "I build",
-      { chip: 0 },
-      "Shopify stores that sell,",
-      { chip: 1 },
-      "AI agents that work, and",
-      { chip: 2 },
-      "apps made for production.",
-    ] as ({ chip: number } | string)[],
-    chips: [
-      { src: "/images/hero-chip-1.jpg", alt: "Paper-cut illustration of a shopping bag" },
-      { src: "/images/hero-chip-2.jpg", alt: "Paper-cut illustration of a friendly robot" },
-      { src: "/images/hero-chip-3.jpg", alt: "Paper-cut illustration of a mobile app" },
+      "I design, build and speed up Shopify stores for DTC brands, then add AI agents that handle support and sales 24/7.",
+    primary: "Get a free store review",
+    secondary: "Book a 15-min call",
+    proof:
+      "100% Job Success on Upwork · 11+ projects delivered · Replies within 24h",
+  },
+  brands: {
+    title: "Stores I've worked on",
+    // TODO: Replace grey text wordmarks with approved SVGs.
+    names: [
+      "Magic Spoon",
+      "Spacegoods",
+      "Flare Audio",
+      "Away",
+      "Monica Vinader",
+      "Miansai",
+      "Gorjana",
     ],
-    primary: "Start a project",
-    review: "Get a free store review",
-    secondary: "See my work",
-    call: "Book a 15-min call",
-    marquee: ["Shopify", "Next.js", "NestJS", "Flutter", "React Native", "AI Agents", "Stripe", "Supabase", "n8n"],
-    badge: "Shopify · AI · SaaS · Mobile · ",
   },
   about: {
     title: "About",
     sticker: "Casablanca, MA",
     portrait: "/images/portrait.jpg",
     portraitAlt: "Ayoub Wahid, Shopify developer based in Casablanca",
-    text: "I combine hands-on engineering with real project leadership. By day I'm a Technical Project Manager at a major telecom operator, where I led the merger of three legacy sales platforms into one unified B2B/B2C app. On the side, I help brands and founders ship Shopify stores, SaaS products, mobile apps and AI tools that real customers depend on.",
-    tags: ["Shopify Expert", "Full-Stack", "AI Development", "Mobile Apps", "Project Leadership"],
+    text: "I combine hands-on engineering with enterprise project leadership. At a major telecom operator, I led the merger of three legacy sales platforms into one B2B/B2C app. That's why your project gets a clear scope, milestones and steady updates, not just code.",
+    tags: [
+      "Shopify Expert",
+      "Full-Stack",
+      "AI Development",
+      "Mobile Apps",
+      "Project Leadership",
+    ],
     languagesLabel: "Languages",
     languages: ["English", "French", "Arabic"],
     educationLabel: "Education",
@@ -90,50 +94,83 @@ export const site = {
       {
         n: "01",
         title: "Shopify & E-commerce",
-        pitch: "Stores built to convert, not just to look good.",
+        projectType: "Shopify store",
+        cta: "Discuss your Shopify store",
+        pitch:
+          "Launch or improve a Shopify store that makes it easier for customers to buy.",
         bullets: [
-          "Store setup and launch",
-          "Custom Liquid themes and sections",
-          "Dawn and premium theme customization",
-          "COD order forms",
-          "Upsells and bundles",
-          "Speed and CRO",
-          "Pixel tracking (Meta, TikTok, Google)",
-          "Headless Shopify with Next.js",
-          "Store-to-mobile-app conversion",
+          "Launch a store that converts from day one",
+          "Faster pages and higher conversion (speed & CRO)",
+          "Upsells, bundles and subscriptions that raise order value",
+          "COD forms and tracking set up right (Meta, TikTok, Google)",
+          "Turn your store into an iOS & Android app",
         ],
       },
       {
         n: "02",
-        title: "AI Development",
-        pitch: "AI that does real work in your business.",
+        title: "AI Agents for Stores",
+        projectType: "AI agent",
+        cta: "Discuss an AI agent",
+        pitch: "Give shoppers helpful answers and your team more time.",
         bullets: [
-          "AI agents, chatbots and voice agents",
-          "LLM integrations and RAG systems",
-          "AI-powered workflows",
-          "Turning prototypes into secure, scalable products",
+          "A 24/7 assistant that answers product and order questions",
+          "Chat & WhatsApp support with human handoff",
+          "Trained on your catalog and policies",
+          "Workflows that save your team hours every week",
         ],
       },
       {
         n: "03",
-        title: "SaaS, Web & Mobile",
-        pitch: "From MVP to production.",
+        title: "Also building: SaaS, Web & Mobile",
+        projectType: "SaaS or web app",
+        cta: "Discuss your web app",
+        pitch: "Also building: SaaS, Web & Mobile.",
         bullets: [
-          "SaaS MVPs and multi-tenant platforms",
+          "MVPs built for production",
           "Dashboards, marketplaces and CRMs",
-          "iOS and Android apps with Flutter and React Native",
-          "APIs and integrations (REST, GraphQL, Stripe Connect, PayPal, Twilio)",
-          "Automation with n8n, Zapier and Make",
+          "Mobile apps with Flutter and React Native",
         ],
       },
     ],
   },
-  work: { title: "Featured work", cta: "View project" },
+  work: {
+    title: "Selected work",
+    description:
+      "A selection of independent studies of live products. Each one looks at how the experience guides people from first impression to next step.",
+    cta: "Explore this study",
+  },
+  // TODO: Add only verified, publishable results. Empty values are not rendered.
+  projectResults: {
+    "monica-vinader": "",
+    miansai: "",
+    gorjana: "",
+    "magic-spoon": "",
+    spacegoods: "",
+    "flare-audio": "",
+    away: "",
+    ribbo: "",
+    legalcentre: "",
+  },
+  testimonials: {
+    title: "What clients say",
+    via: "via Upwork",
+    // TODO: Add only client-approved, verifiable testimonials. Keep empty entries hidden until complete.
+    items: [
+      { quote: "", name: "", role: "", company: "" },
+      { quote: "", name: "", role: "", company: "" },
+      { quote: "", name: "", role: "", company: "" },
+    ],
+  },
+  shop: {
+    license: "One end product per purchase. No redistribution or resale.",
+    refundPolicy:
+      "Refund requests are reviewed case by case. Contact Ayoub to discuss your situation.",
+  },
   results: {
     title: "Results",
     items: [
       { value: 11, suffix: "+", label: "Upwork projects delivered" },
-      { value: 3, suffix: "", label: "languages" },
+      { value: 100, suffix: "%", label: "Job Success on Upwork" },
       { value: 1, suffix: "", label: "enterprise platform merger led" },
       { value: 24, suffix: "h", label: "reply time" },
     ],
@@ -142,38 +179,117 @@ export const site = {
     title: "Process",
     steps: [
       { n: "01", title: "Discover", text: "Smart questions, clear scope." },
-      { n: "02", title: "Plan", text: "Milestones and estimates before any code." },
-      { n: "03", title: "Build", text: "Regular updates, clean documented code you own." },
-      { n: "04", title: "Launch & support", text: "Help after launch, not just delivery." },
+      {
+        n: "02",
+        title: "Plan",
+        text: "Milestones and estimates before any code.",
+      },
+      {
+        n: "03",
+        title: "Build",
+        text: "Regular updates, clean documented code you own.",
+      },
+      {
+        n: "04",
+        title: "Launch & support",
+        text: "Help after launch, not just delivery.",
+      },
     ],
   },
   stack: {
-    title: "Tech stack",
-    groups: [
-      { name: "E-commerce", items: ["Shopify", "Liquid", "Shopify Plus"] },
-      { name: "Frontend", items: ["React", "Next.js", "TypeScript", "Tailwind"] },
-      { name: "Backend", items: ["Node.js", "NestJS", "Python", "FastAPI"] },
-      { name: "Mobile", items: ["Flutter", "React Native", "Expo"] },
-      { name: "Data", items: ["PostgreSQL", "MySQL", "MongoDB", "Supabase"] },
-      { name: "AI", items: ["OpenAI", "Claude", "RAG", "Vector DBs"] },
-      { name: "Cloud", items: ["Docker", "Vercel", "CI/CD"] },
+    line: "Built with Shopify, Next.js, NestJS, Flutter, OpenAI and Claude.",
+  },
+  review: {
+    title: "Get a free store review",
+    text: "Send me your store link. Within 48h you get a short video with the top fixes for speed, conversion and trust. Free, no commitment.",
+    projectType: "Free store review",
+    labels: { storeUrl: "Store URL", email: "Email", goal: "Main goal" },
+    placeholders: {
+      storeUrl: "https://yourstore.com",
+      email: "you@company.com",
+      goal: "Select your main goal",
+    },
+    goals: ["More sales", "Faster store", "Launch", "Other"],
+    send: "Get my free review",
+    sending: "Sending...",
+    sent: "Thanks. Your store review request has been sent.",
+    validation: {
+      storeUrl: "Enter a valid store URL beginning with https:// or http://.",
+      email: "Enter a valid email address.",
+      goal: "Choose your main goal.",
+      summary: "Check the highlighted fields and try again.",
+    },
+  },
+  faq: {
+    title: "Frequently asked questions",
+    items: [
+      {
+        question: "How long does a project take?",
+        answer:
+          "A landing page takes 1–2 weeks, a full Shopify store 3–5 weeks, an AI agent 2–4 weeks. You get a clear timeline before we start.",
+      },
+      {
+        question: "How much does it cost?",
+        answer:
+          "Most projects range from $1,000 to $8,000+. After a short call, you get a fixed quote with milestones.",
+      },
+      {
+        question: "Can you work on my existing store?",
+        answer:
+          "Yes. I can redesign, speed up or add features to your current Shopify store without rebuilding from zero.",
+      },
+      {
+        question: "Shopify or a custom build?",
+        answer:
+          "Shopify for most stores: fast to launch and easy to manage. Custom (headless Next.js) when you need full control or unusual features. I'll recommend what fits.",
+      },
+      {
+        question: "What happens after launch?",
+        answer:
+          "You get a handover so you can manage everything yourself, plus optional ongoing support for updates, speed and new features.",
+      },
+      {
+        question: "Do you work with clients outside Morocco?",
+        answer:
+          "Yes. I work with brands in the US, Europe and the Gulf, in English, French or Arabic.",
+      },
     ],
+  },
+  booking: {
+    title: "Book a free 15-min call",
+    formText:
+      "Share your details and a little about your project. I'll get back to you to arrange a time.",
+    // TODO: Set current monthly availability and update the month.
+    spotsLeft: 0,
+    month: "November",
+    // TODO: Replace with your live Cal.com event URL when ready.
+    calLink: "wahidayoub/15min",
   },
   contact: {
     title: "Contact",
     labels: {
-      name: "Name", email: "Email", projectType: "Project type", budget: "Budget range",
-      message: "Message", website: "Website", linkedin: "LinkedIn", github: "GitHub",
+      name: "Name",
+      email: "Email",
+      projectType: "Project type",
+      budget: "Budget range",
+      message: "Message",
+      website: "Website",
+      linkedin: "LinkedIn",
+      github: "GitHub",
     },
     placeholders: {
-      name: "Your name", email: "you@company.com", projectType: "Select one",
-      budget: "Select a range", message: "What are you building, and what does success look like?",
+      name: "Your name",
+      email: "you@company.com",
+      projectType: "Select one",
+      budget: "Select a range",
+      message: "What are you building, and what does success look like?",
     },
     send: "Send message",
     sending: "Sending...",
     sent: "Message sent.",
     sendError: "The message could not be sent. Please try again.",
-    connectionError: "Could not reach the server. Check your connection and try again.",
+    connectionError:
+      "Could not reach the server. Check your connection and try again.",
     validation: {
       name: "Enter a name between 2 and 100 characters.",
       email: "Enter a valid email address.",
@@ -181,12 +297,22 @@ export const site = {
       message: "Write a message between 10 and 5,000 characters.",
       summary: "Check the highlighted fields and try again.",
     },
-    headline: ["Got a project?", "Let's build it."],
-    text: "Send a short description of what you have in mind, and I'll reply with smart questions, a clear plan and a realistic timeline.",
-    projectTypes: ["Shopify store", "AI agent", "SaaS or web app", "Mobile app", "Other"],
+    headline: ["Tell me what", "you're building."],
+    text: "Share a little about your project. I’ll review it personally and get back to you within 24 hours with questions and a practical next step. It’s fine if your idea or budget isn’t fully worked out yet.",
+    projectTypes: [
+      "Shopify store",
+      "AI agent",
+      "SaaS or web app",
+      "Mobile app",
+      "Free store review",
+      "Other",
+    ],
     budgets: ["Not sure yet", "$1,000 – $3,000", "$3,000 – $8,000", "$8,000+"],
     call: "Book a 15-min call",
     upwork: "Upwork",
   },
-  footer: { copy: "© 2026 Ayoub Wahid · Casablanca, Morocco", top: "Back to top" },
+  footer: {
+    copy: "© 2026 Ayoub Wahid · Casablanca, Morocco",
+    top: "Back to top",
+  },
 };

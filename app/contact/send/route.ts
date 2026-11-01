@@ -182,15 +182,31 @@ export async function POST(request: NextRequest) {
   }
   if (body.website) return fail("The message could not be accepted.", 400);
   const field = (key: string) => typeof body[key] === "string" ? body[key].trim() : "";
-  const name = field("name");
-  const email = field("email");
   const projectType = field("projectType");
+  const isReviewRequest = projectType === site.review.projectType
+    && (typeof body.storeUrl === "string" || typeof body.goal === "string");
+  const name = isReviewRequest ? "Store review request" : field("name");
+  const email = field("email");
   const budget = field("budget");
-  const message = field("message");
+  let message = field("message");
   if (name.length < 2 || name.length > 100 || hasControl(name)) return fail("Please enter a name between 2 and 100 characters.", 400);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return fail("Please enter a valid email address.", 400);
   if (!projectTypes.has(projectType)) return fail("Please select a project type.", 400);
   if (budget && (budget.length > 100 || !budgets.has(budget))) return fail("Please choose a valid budget range.", 400);
+  if (isReviewRequest) {
+    const storeUrl = field("storeUrl");
+    const goal = field("goal");
+    let validUrl = false;
+    try {
+      const url = new URL(storeUrl);
+      validUrl = (url.protocol === "https:" || url.protocol === "http:") && !url.username && !url.password;
+    } catch {
+      validUrl = false;
+    }
+    if (!validUrl || storeUrl.length > 2048 || hasControl(storeUrl)) return fail(site.review.validation.storeUrl, 400);
+    if (!site.review.goals.includes(goal)) return fail(site.review.validation.goal, 400);
+    message = `Store URL: ${storeUrl}\nMain goal: ${goal}`;
+  }
   if (message.length < 10 || message.length > 5000 || hasControl(message, true)) return fail("Please write a message between 10 and 5,000 characters.", 400);
 
   const setting = (key: string) => {
@@ -239,7 +255,7 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json({
       success: true,
-      message: "Thanks for getting in touch. Your message has been sent, and I'll reply within 24 hours.",
+      message: isReviewRequest ? site.review.sent : "Thanks for getting in touch. Your message has been sent, and I'll reply within 24 hours.",
     });
   } catch {
     return fail("Email delivery is temporarily unavailable. Please try again.", 502);

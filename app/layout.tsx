@@ -9,17 +9,17 @@ const sans = localFont({ src: "../public/fonts/inter-latin.woff2", weight: "100 
 const mono = localFont({ src: "../public/fonts/jetbrains-mono-latin.woff2", weight: "100 800", variable: "--font-mono", display: "swap" });
 
 export function generateMetadata(): Metadata {
-  const origin = publicOrigin();
-  const title = `${site.name} — Shopify Expert & Full-Stack / AI Developer, Casablanca`;
+  const origin = publicOrigin() ?? site.url;
+  const title = site.metadataTitle;
   return {
-    ...(origin ? { metadataBase: new URL(origin) } : {}),
+    metadataBase: new URL(origin),
     title,
     description: site.description,
-    keywords: ["Shopify expert", "Shopify developer", "AI developer", "full-stack developer", "Casablanca", "Morocco", "freelance"],
+    keywords: ["Shopify developer", "Shopify stores", "AI agents", "DTC brands", "Casablanca", "Morocco"],
     authors: [{ name: site.name }],
     openGraph: { title, description: site.description, type: "website", siteName: site.name, locale: "en_US" },
     twitter: { card: "summary_large_image", title, description: site.description },
-    alternates: origin ? { canonical: "/" } : undefined,
+    alternates: { canonical: "/" },
   };
 }
 

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { site } from "@/content/site";
-import { Clock } from "./clock";
 
 function ThemeToggle() {
   const [dark, setDark] = useState(false);
@@ -27,20 +26,20 @@ function ThemeToggle() {
 
 export function TopBar() {
   return (
-    <header className="fixed inset-x-0 top-0 z-40 flex w-full min-w-0 items-start justify-between gap-3 overflow-hidden border-b border-ink/10 bg-paper/75 px-4 py-2.5 backdrop-blur-md md:px-8">
-      <div className="min-w-0 font-mono leading-tight">
-        <div className="text-[10px] uppercase tracking-widest opacity-70">{site.clockLabel}</div>
-        <Clock className="text-sm font-medium tabular-nums" />
-      </div>
-      <div className="flex min-w-0 items-center gap-3">
-        <div className="flex min-w-0 items-center gap-2 text-right font-mono text-[10px] uppercase leading-tight tracking-wider md:text-xs">
-          <span className="relative flex h-2.5 w-2.5 shrink-0">
-            <span className="absolute inset-0 animate-pulseDot rounded-full bg-emerald-500" />
-            <span className="relative h-2.5 w-2.5 rounded-full bg-emerald-500" />
-          </span>
-          <span className="truncate text-left">{site.availability}</span>
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-ink/10 bg-paper/90 px-4 backdrop-blur-md md:px-8">
+      <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-3">
+        <a href="#home" className="shrink-0 font-display text-lg uppercase tracking-wide sm:text-xl">{site.name}</a>
+        <nav aria-label="Main" className="hidden items-center gap-1 font-medium md:flex">
+          {site.nav.filter((item) => ["services", "work", "process", "about"].includes(item.id)).map((item) => (
+            <a key={item.id} href={`#${item.id}`} className="inline-flex min-h-11 items-center rounded-full px-3 text-sm transition-colors hover:bg-sand">{item.label}</a>
+          ))}
+          <a href="/shop" className="inline-flex min-h-11 items-center rounded-full px-3 text-sm transition-colors hover:bg-sand">Templates</a>
+        </nav>
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <a href="/shop" className="inline-flex min-h-11 items-center rounded-full px-2 text-xs font-medium transition-colors hover:bg-sand sm:hidden">Templates</a>
+          <a href="#book" className="inline-flex min-h-11 items-center rounded-full bg-accent px-3 text-[11px] font-semibold text-onaccent transition-transform hover:-translate-y-0.5 sm:px-5 sm:text-sm">{site.cta}</a>
+          <ThemeToggle />
         </div>
-        <ThemeToggle />
       </div>
     </header>
   );

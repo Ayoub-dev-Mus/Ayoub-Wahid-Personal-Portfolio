@@ -1,48 +1,64 @@
-import Image from "next/image";
+import { Check } from "lucide-react";
 import { site } from "@/content/site";
 import { Reveal, SectionLabel } from "./reveal";
 
+const strengths = [
+  {
+    title: "Clear project leadership",
+    text: "Scope, milestones, and estimates are agreed before development starts.",
+  },
+  {
+    title: "Hands-on engineering",
+    text: "Work directly with the developer building your store or product.",
+  },
+  {
+    title: "Built for handoff",
+    text: "Get documented, maintainable work your team can own after launch.",
+  },
+];
+
 export function About() {
-  const a = site.about;
+  const about = site.about;
   return (
-    <section id="about" className="px-4 py-24 md:px-8 md:py-32">
-      <Reveal><SectionLabel n="01">{a.title}</SectionLabel></Reveal>
-      <div className="mt-12 grid items-start gap-12 md:grid-cols-12 md:gap-16">
-        <Reveal className="md:col-span-5">
-          <div className="relative mx-auto max-w-sm rotate-[-4deg] transition-transform duration-500 hover:rotate-0 md:max-w-none">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-ink bg-sand">
-              <Image src={a.portrait} alt={a.portraitAlt} fill sizes="(min-width:768px) 40vw, 90vw" className="object-cover" priority={false} />
-            </div>
-            <span className="absolute -bottom-5 -right-3 rotate-6 rounded-full border border-ink bg-accent px-5 py-3 font-mono text-xs font-bold uppercase tracking-widest text-onaccent shadow-[4px_4px_0_rgb(var(--ink))] md:-right-6">
-              {a.sticker}
-            </span>
-            <span className="absolute -left-3 top-8 -rotate-12 rounded-full border border-ink bg-sand px-4 py-2 font-display text-xl uppercase">{site.ui.greeting}</span>
-          </div>
-        </Reveal>
-        <div className="md:col-span-7">
+    <section id="about" className="bg-sand px-4 py-20 md:px-8 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <Reveal><SectionLabel n="04">{about.title}</SectionLabel></Reveal>
+        <div className="mt-8 grid gap-10 lg:grid-cols-[.8fr_1.2fr] lg:gap-16">
           <Reveal>
-            <p className="font-display text-3xl uppercase leading-[1.1] sm:text-4xl md:text-[2.6rem]">{a.text}</p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <ul className="mt-8 flex flex-wrap gap-2">
-              {a.tags.map((t) => (
-                <li key={t} className="rounded-full border border-ink px-4 py-2 text-sm transition-colors hover:bg-accent hover:text-onaccent">{t}</li>
+            <p className="font-display text-4xl uppercase leading-[.95] sm:text-5xl md:text-6xl">Experienced delivery. Direct communication.</p>
+            <p className="mt-5 max-w-xl text-base leading-relaxed opacity-80">{about.text}</p>
+            <ul className="mt-6 flex flex-wrap gap-2">
+              {about.tags.map((tag) => (
+                <li key={tag} className="rounded-full border border-ink/40 px-3 py-1.5 text-xs font-medium">{tag}</li>
               ))}
             </ul>
           </Reveal>
-          <Reveal delay={0.15}>
-            <dl className="mt-10 grid gap-0 border-t border-ink">
-              <div className="grid gap-2 border-b border-ink py-5 sm:grid-cols-[9rem_1fr]">
-                <dt className="font-mono text-xs uppercase tracking-widest opacity-70">{a.languagesLabel}</dt>
-                <dd className="font-medium">{a.languages.join(" · ")}</dd>
-              </div>
-              <div className="grid gap-2 border-b border-ink py-5 sm:grid-cols-[9rem_1fr]">
-                <dt className="font-mono text-xs uppercase tracking-widest opacity-70">{a.educationLabel}</dt>
-                <dd className="space-y-2 font-medium">{a.education.map((e) => <p key={e}>{e}</p>)}</dd>
-              </div>
-            </dl>
-          </Reveal>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            {strengths.map((strength, index) => (
+              <Reveal key={strength.title} delay={index * 0.06}>
+                <article className="h-full rounded-2xl border border-ink bg-paper p-5">
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-accent text-onaccent"><Check size={17} aria-hidden /></span>
+                  <h3 className="mt-5 font-display text-2xl uppercase leading-[.95]">{strength.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed opacity-75">{strength.text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
+
+        <Reveal>
+          <dl className="mt-8 grid gap-4 border-t border-ink/25 pt-5 sm:grid-cols-2">
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-widest opacity-60">{about.languagesLabel}</dt>
+              <dd className="mt-2 text-sm font-medium">{about.languages.join(" · ")}</dd>
+            </div>
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-widest opacity-60">{about.educationLabel}</dt>
+              <dd className="mt-2 text-sm font-medium">{about.education[0]}</dd>
+            </div>
+          </dl>
+        </Reveal>
       </div>
     </section>
   );
