@@ -19,6 +19,12 @@ const nextConfig = {
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   outputFileTracingRoot: root,
+  outputFileTracingIncludes: {
+    "/shop": ["./private/templates/*.zip"],
+    "/shop/api/order": ["./private/templates/*.zip"],
+    "/shop/complete": ["./private/templates/*.zip"],
+    "/shop/download": ["./private/templates/*.zip"],
+  },
   allowedDevOrigins: ["127.0.0.1", "localhost", "*.replit.dev", "*.replit.app"],
   images: { formats: ["image/avif", "image/webp"] },
   experimental: {

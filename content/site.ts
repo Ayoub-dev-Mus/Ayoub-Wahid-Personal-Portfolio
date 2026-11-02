@@ -1,6 +1,6 @@
 import { contactLinks } from "@/lib/site";
 
-export const CAL_LINK = "wahidayoub/15min";
+export const CAL_LINK = "https://calendly.com/ayoubshipz";
 
 // Edit all copy here. Components read from this file only.
 export const site = {
@@ -72,7 +72,7 @@ export const site = {
   about: {
     title: "About",
     sticker: "Casablanca, MA",
-    portrait: "/images/portrait.jpg",
+    portrait: "/images/hero-avatar.png",
     portraitAlt: "Ayoub Wahid, Shopify developer based in Casablanca",
     text: "I combine hands-on engineering with enterprise project leadership. At a major telecom operator, I led the merger of three legacy sales platforms into one B2B/B2C app. That's why your project gets a clear scope, milestones and steady updates, not just code.",
     tags: [

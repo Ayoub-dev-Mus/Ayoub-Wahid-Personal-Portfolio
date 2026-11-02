@@ -4,7 +4,9 @@ import { Reveal, SectionLabel } from "./reveal";
 export function Booking() {
   const booking = site.booking;
   if (!CAL_LINK.trim()) return null;
-  const embedUrl = `https://cal.com/${CAL_LINK.trim()}?embed=true`;
+  const embedUrl = new URL(CAL_LINK);
+  embedUrl.searchParams.set("embed_type", "Inline");
+  embedUrl.searchParams.set("hide_gdpr_banner", "1");
 
   return (
     <section id="book" className="px-4 py-20 md:px-8 md:py-28">
@@ -19,7 +21,7 @@ export function Booking() {
         </Reveal>
         <div className="mt-8 overflow-hidden rounded-2xl border border-ink bg-paper">
           <iframe
-            src={embedUrl}
+            src={embedUrl.toString()}
             title={booking.title}
             className="h-[680px] w-full border-0"
             loading="lazy"

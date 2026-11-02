@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   if (!origin) return [];
   return [
     { url: `${origin}/`, changeFrequency: "monthly", priority: 1 },
+    { url: `${origin}/shop`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${origin}/shopify`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${origin}/fr/shopify`, changeFrequency: "monthly", priority: 0.8 },
   ];
